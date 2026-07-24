@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar de Concorrentes — Ecovita</title>
+<style>
+/* ===================== TEMAS ===================== */
+[data-theme="dark"] {
+  --bg: #0d1117; --bg2: #161b22; --bg3: #1c2333; --bg4: #21262d;
+  --border: #30363d; --text: #e6edf3; --text2: #8b949e; --text3: #6e7681;
+  --shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+[data-theme="light"] {
+  --bg: #f6f8fa; --bg2: #ffffff; --bg3: #f0f2f4; --bg4: #e8eaed;
+  --border: #d0d7de; --text: #1f2328; --text2: #636c76; --text3: #9198a1;
+  --shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+:root {
+  --green:#3fb950; --blue:#58a6ff; --orange:#f0883e; --red:#f85149;
+  --purple:#bc8cff; --yellow:#e3b341; --accent:#238636; --accent-h:#2ea043;
+  --sidebar-w:222px;
+}
+[data-theme="dark"] {
+  --green-dim:#1a3d22; --blue-dim:#0d2847; --orange-dim:#3d2100;
+  --red-dim:#3d0f0b; --purple-dim:#2d1f3a; --yellow-dim:#3d3000;
+}
+[data-theme="light"] {
+  --green-dim:#dafbe1; --blue-dim:#ddf4ff; --orange-dim:#fff3e0;
+  --red-dim:#ffebe9; --purple-dim:#f5f0ff; --yellow-dim:#fff8c5;
+}
+/* ===================== BASE ===================== */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;transition:background .2s,color .2s}
+/* ===================== SIDEBAR ===================== */
+#sb{width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.sb-logo{padding:16px 15px 13px;border-bottom:1px solid var(--border)}
+.sb-logo h1{font-size:14px;font-weight:700}
+.sb-logo .sub{font-size:11px;color:var(--text2);margin-top:2px}
+.sb-badge{display:inline-block;background:var(--green-dim);color:var(--green);font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;border:1px solid var(--green);margin-top:5px;letter-spacing:.5px}
+nav{flex:1;padding:5px 0;overflow-y:auto}
+.ns{padding:11px 15px 3px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);font-weight:600}
+.ni{display:flex;align-items:center;gap:9px;padding:7px 15px;cursor:pointer;color:var(--text2);font-size:13px;transition:all .15s;border-left:3px solid transparent;user-select:none}
+.ni:hover{background:var(--bg3);color:var(--text)}
+.ni.active{background:var(--bg3);color:var(--text);border-left-color:var(--blue);font-weight:500}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center}
+.sb-foot{padding:10px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);line-height:1.5}
+.sb-foot strong{color:var(--green)}
+/* ===================== MAIN ===================== */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:10px}
+.topbar h2{font-size:15px;font-weight:600;flex:1}
+.tsub{font-size:12px;color:var(--text2)}
+.btn{padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.bp{background:var(--accent);color:#fff;border-color:var(--accent)}.bp:hover{background:var(--accent-h)}
+.bo{background:transparent;color:var(--text);border-color:var(--border)}.bo:hover{background:var(--bg3)}
+.bb{background:var(--blue-dim);color:var(--blue);border-color:var(--blue)}.bb:hover{opacity:.85}
+.bsm{padding:4px 9px;font-size:11px}
+.theme-btn{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg3);cursor:pointer;font-size:12px;color:var(--text2);transition:all .15s}
+.theme-btn:hover{color:var(--text);border-color:var(--text2)}
+.content{flex:1;overflow-y:auto;padding:20px}
+.page{display:none}.page.active{display:block}
+/* ===================== CARDS ===================== */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:17px;margin-bottom:13px;box-shadow:var(--shadow)}
+.chd{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.ct{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+/* STATS */
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:15px 17px}
+.sl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.sv{font-size:25px;font-weight:700;line-height:1}
+.ss{font-size:11px;color:var(--text2);margin-top:4px}.ss.up{color:var(--green)}
+/* TAGS */
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid}
+.tb{background:var(--blue-dim);color:var(--blue);border-color:var(--blue)}
+.tg{background:var(--green-dim);color:var(--green);border-color:var(--green)}
+.to{background:var(--orange-dim);color:var(--orange);border-color:var(--orange)}
+.tr{background:var(--red-dim);color:var(--red);border-color:var(--red)}
+.tp{background:var(--purple-dim);color:var(--purple);border-color:var(--purple)}
+.ty{background:var(--yellow-dim);color:var(--yellow);border-color:var(--yellow)}
+.tgr{background:var(--bg3);color:var(--text2);border-color:var(--border)}
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:8px 10px;text-align:left;font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);font-weight:600}
+td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
+.tdf{display:flex;align-items:center;gap:7px}
+.av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+/* PROG */
+.pr{margin-bottom:9px}
+.pl{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
+.pb{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px;transition:width .4s}
+/* TIMELINE */
+.tli{display:flex;gap:13px;padding:10px 0;border-bottom:1px solid var(--border)}
+.tli:last-child{border-bottom:none}
+.tldot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.tlev{font-size:13px;font-weight:500;margin-bottom:2px}
+.tldet{font-size:12px;color:var(--text2)}
+/* AI BOX */
+.aib{background:var(--blue-dim);border:1px solid var(--blue);border-radius:8px;padding:16px;margin-bottom:13px}
+.aihd{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.ait{font-size:13px;font-weight:600;color:var(--blue)}
+.aid{font-size:11px;color:var(--text2);margin-left:auto}
+.aix{font-size:13px;line-height:1.75}
+.aix p{margin-bottom:8px}.aix p:last-child{margin-bottom:0}
+.spin-box{display:flex;align-items:center;gap:9px;color:var(--text2);font-size:13px;padding:12px 0}
+.sp{width:15px;height:15px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* ALERT */
+.ab{display:flex;align-items:flex-start;gap:10px;border-radius:8px;padding:11px 13px;margin-bottom:9px}
+.ai2{font-size:14px;flex-shrink:0;margin-top:1px}
+.abody{font-size:13px;line-height:1.5;flex:1}
+.abody strong{display:block;margin-bottom:2px}
+.infob{display:flex;gap:10px;background:var(--blue-dim);border:1px solid var(--blue);border-radius:8px;padding:11px 13px;margin-bottom:13px;font-size:13px;line-height:1.6}
+/* FORM */
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.fg input,.fg select,.fg textarea{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;padding:7px 11px;outline:none;transition:border-color .15s;font-family:inherit;width:100%}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--blue)}
+.fg textarea{resize:vertical;min-height:70px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ff{grid-column:1/-1}
+/* MODAL */
+.mov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;align-items:center;justify-content:center}
+.mov.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;width:550px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal h3{font-size:14px;font-weight:600;margin-bottom:16px}
+.mft{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
+.tab{padding:7px 13px;cursor:pointer;font-size:13px;color:var(--text2);border-bottom:2px solid transparent;transition:all .15s}
+.tab:hover{color:var(--text)}.tab.active{color:var(--text);border-bottom-color:var(--blue)}
+/* TOGGLE */
+.tog{width:37px;height:20px;background:var(--border);border-radius:10px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.tog.on{background:var(--accent)}.tog::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s}.tog.on::after{left:19px}
+/* SETTINGS */
+.srow{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:13px}.srow:last-child{border-bottom:none}
+.sinf{flex:1}.slbl{font-size:13px;font-weight:500}.sdsc{font-size:12px;color:var(--text2);margin-top:2px}
+/* AD GRID */
+.adgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:11px}
+.adc{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px}
+.adct{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
+.adtitle{font-size:13px;font-weight:600;margin-bottom:4px}
+.adtxt{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:7px}
+.adf{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+/* CODE BLOCK */
+.cb{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:9px 11px;font-family:monospace;font-size:11px;color:var(--green);line-height:1.7;word-break:break-all;margin:7px 0}
+/* STEP */
+.step{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px;margin-bottom:9px}
+.snum{width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-right:7px;flex-shrink:0;vertical-align:middle}
+/* EMPTY */
+.empty{text-align:center;padding:36px 18px;color:var(--text2)}
+.ei{font-size:34px;margin-bottom:9px}
+.empty p{font-size:13px;margin-bottom:13px;line-height:1.6}
+/* COMP CARD */
+.cc{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px}
+.cct{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.ccn{font-size:13px;font-weight:600}.ccs{font-size:11px;color:var(--text2)}
+.ccsb{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.ccsf{height:100%;border-radius:2px}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="sb">
+  <div class="sb-logo">
+    <h1>🏢 Intel. Competitiva</h1>
+    <div class="sub">Ecovita Construtora</div>
+    <div><span class="sb-badge">FASE 1 — RADAR MVP</span></div>
+  </div>
+  <nav>
+    <div class="ns">Monitoramento</div>
+    <div class="ni active" data-p="overview"><span>📊</span> Visão Geral</div>
+    <div class="ni" data-p="concorrentes"><span>🏗️</span> Concorrentes</div>
+    <div class="ni" data-p="meta"><span>📣</span> Meta Ads <span class="nb" id="bdg-meta">0</span></div>
+    <div class="ni" data-p="sites"><span>🌐</span> Sites <span class="nb" id="bdg-sites">0</span></div>
+    <div class="ni" data-p="instagram"><span>📸</span> Instagram</div>
+    <div class="ns">Inteligência</div>
+    <div class="ni" data-p="ia"><span>🤖</span> Análise IA</div>
+    <div class="ni" data-p="alertas"><span>🔔</span> Alertas <span class="nb" id="bdg-alrt">0</span></div>
+    <div class="ns">Sistema</div>
+    <div class="ni" data-p="config"><span>⚙️</span> Configurações</div>
+    <div class="ni" data-p="guia"><span>📖</span> Guia de Coleta</div>
+  </nav>
+  <div class="sb-foot">Atualizado:<br><strong id="last-t">—</strong></div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+  <div class="topbar">
+    <h2 id="ptitle">Visão Geral</h2>
+    <span class="tsub" id="psub">Monitoramento dos concorrentes</span>
+    <div class="theme-btn" id="tbtn" onclick="toggleTheme()">☀️ Claro</div>
+    <button class="btn bo" onclick="doRefresh()">🔄</button>
+    <button class="btn bp" onclick="openModal('m-comp')">+ Concorrente</button>
+  </div>
+  <div class="content">
+
+    <!-- OVERVIEW -->
+    <div class="page active" id="page-overview">
+      <div id="top-alts"></div>
+      <div class="g4" style="margin-bottom:13px">
+        <div class="stat"><div class="sl">Concorrentes</div><div class="sv" id="s1">0</div><div class="ss">monitorados</div></div>
+        <div class="stat"><div class="sl">Anúncios Meta</div><div class="sv" id="s2" style="color:var(--blue)">0</div><div class="ss up" id="s2s">registrados</div></div>
+        <div class="stat"><div class="sl">Mudanças em Sites</div><div class="sv" id="s3" style="color:var(--orange)">0</div><div class="ss" id="s3s">detectadas</div></div>
+        <div class="stat"><div class="sl">Alertas Ativos</div><div class="sv" id="s4" style="color:var(--red)">0</div><div class="ss">sem leitura</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="card">
+            <div class="chd"><span class="ct">Índice de Atividade</span><span style="font-size:11px;color:var(--text2)">total acumulado</span></div>
+            <div id="act-bars"></div>
+          </div>
+          <div class="card">
+            <div class="chd"><span class="ct">Concorrentes</span><button class="btn bo bsm" onclick="openModal('m-comp')">+ Add</button></div>
+            <div id="ov-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:9px"></div>
+            <div id="ov-empty" class="empty" style="display:none"><div class="ei">🏗️</div><p>Nenhum concorrente.</p><button class="btn bp" onclick="openModal('m-comp')">+ Adicionar</button></div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="chd"><span class="ct">Linha do Tempo (hoje)</span></div>
+            <div id="tl"></div>
+            <div id="tl-e" class="empty" style="display:none"><div class="ei">📋</div><p>Nenhuma atividade hoje.<br>Registre dados em Meta Ads, Sites ou Instagram.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONCORRENTES -->
+    <div class="page" id="page-concorrentes">
+      <div class="card">
+        <div class="chd"><span class="ct">Concorrentes Monitorados</span><button class="btn bp" onclick="openModal('m-comp')">+ Adicionar</button></div>
+        <table><thead><tr><th>Empresa</th><th>Site</th><th>Instagram</th><th>Ads Library</th><th>Prioridade</th><th>Atividade</th><th></th></tr></thead>
+        <tbody id="comp-tb"></tbody></table>
+      </div>
+    </div>
+
+    <!-- META ADS -->
+    <div class="page" id="page-meta">
+      <div class="infob"><span style="font-size:18px;flex-shrink:0">📣</span>
+        <div><strong>Sem API necessária.</strong> Acesse a Biblioteca de Anúncios, copie e registre aqui. Ou use o <strong>Apify</strong> gratuito — veja o <em>Guia de Coleta</em>. Os links diretos para cada concorrente ficam no final da página.</div>
+      </div>
+      <div class="g4" style="margin-bottom:13px">
+        <div class="stat"><div class="sl">Total</div><div class="sv" id="m1" style="color:var(--blue)">0</div><div class="ss">anúncios</div></div>
+        <div class="stat"><div class="sl">Hoje</div><div class="sv" id="m2" style="color:var(--green)">0</div><div class="ss up">novos</div></div>
+        <div class="stat"><div class="sl">Vídeo/Reels</div><div class="sv" id="m3" style="color:var(--purple)">0</div></div>
+        <div class="stat"><div class="sl">Mais Ativo</div><div class="sv" id="m4" style="font-size:13px;padding-top:7px">—</div></div>
+      </div>
+      <div class="card">
+        <div class="chd">
+          <span class="ct">Anúncios Registrados</span>
+          <div style="display:flex;gap:7px;align-items:center">
+            <select id="mf" onchange="renderMeta()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:12px"><option value="">Todos</option></select>
+            <button class="btn bp bsm" onclick="openModal('m-ad')">+ Registrar</button>
+          </div>
+        </div>
+        <div id="adgrid" class="adgrid"></div>
+        <div id="ad-e" class="empty" style="display:none"><div class="ei">📣</div><p>Nenhum anúncio registrado.<br>Clique em "+ Registrar" ou use o Apify (Guia de Coleta).</p></div>
+      </div>
+      <div class="card"><div class="chd"><span class="ct">Volume por Concorrente</span></div><div id="m-bars"></div></div>
+      <div class="card"><div class="chd"><span class="ct">🔗 Links Rápidos — Ads Library</span></div><div id="m-links"></div></div>
+    </div>
+
+    <!-- SITES -->
+    <div class="page" id="page-sites">
+      <div class="infob"><span style="font-size:18px;flex-shrink:0">🌐</span>
+        <div>Registre mudanças que você encontrar nos sites. Para monitoramento automático gratuito: <a href="https://visualping.io" target="_blank" style="color:var(--blue)">Visualping.io</a> (5 grátis) ou <a href="https://changetower.com" target="_blank" style="color:var(--blue)">ChangeTower.com</a>.</div>
+      </div>
+      <div class="card">
+        <div class="chd"><span class="ct">Mudanças Detectadas</span><button class="btn bp bsm" onclick="openModal('m-site')">+ Registrar</button></div>
+        <table><thead><tr><th>Concorrente</th><th>Página</th><th>Tipo</th><th>Antes</th><th>Depois</th><th>Data</th><th></th></tr></thead>
+        <tbody id="site-tb"></tbody></table>
+        <div id="site-e" class="empty" style="display:none"><div class="ei">🌐</div><p>Nenhuma mudança registrada.</p></div>
+      </div>
+      <div class="card"><div class="chd"><span class="ct">🔗 Links dos Sites</span></div><div id="s-links"></div></div>
+    </div>
+
+    <!-- INSTAGRAM -->
+    <div class="page" id="page-instagram">
+      <div class="infob"><span style="font-size:18px;flex-shrink:0">📸</span>
+        <div>Registre posts relevantes. Para monitoramento automático: <a href="https://phantombuster.com" target="_blank" style="color:var(--blue)">Phantombuster.com</a> (6 scrapes/mês grátis).</div>
+      </div>
+      <div class="g4" style="margin-bottom:13px">
+        <div class="stat"><div class="sl">Posts</div><div class="sv" id="ig1">0</div></div>
+        <div class="stat"><div class="sl">Maior Engajamento</div><div class="sv" id="ig2" style="font-size:13px;padding-top:7px">—</div></div>
+        <div class="stat"><div class="sl">Formato Top</div><div class="sv" id="ig3" style="font-size:13px;padding-top:7px">—</div></div>
+        <div class="stat"><div class="sl">Média Likes</div><div class="sv" id="ig4" style="color:var(--red)">0</div></div>
+      </div>
+      <div class="card">
+        <div class="chd"><span class="ct">Posts Registrados</span><button class="btn bp bsm" onclick="openModal('m-ig')">+ Registrar</button></div>
+        <table><thead><tr><th>Concorrente</th><th>Tipo</th><th>Caption</th><th>Likes</th><th>Comentários</th><th>Data</th><th></th></tr></thead>
+        <tbody id="ig-tb"></tbody></table>
+        <div id="ig-e" class="empty" style="display:none"><div class="ei">📸</div><p>Nenhum post registrado.</p></div>
+      </div>
+      <div class="card"><div class="chd"><span class="ct">🔗 Links Instagram</span></div><div id="ig-links"></div></div>
+    </div>
+
+    <!-- IA -->
+    <div class="page" id="page-ia">
+      <div class="infob" id="gm-info"><span style="font-size:18px;flex-shrink:0">🤖</span>
+        <div id="gm-txt">Configure sua chave do <strong>Google Gemini</strong> (gratuita) em Configurações. <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">Obter chave grátis →</a></div>
+      </div>
+      <div style="display:flex;gap:9px;margin-bottom:15px;flex-wrap:wrap">
+        <button class="btn bb" onclick="genAI('diario')">🤖 Resumo do Dia</button>
+        <button class="btn bb" onclick="genAI('oportunidades')">💡 Oportunidades</button>
+        <button class="btn bb" onclick="genAI('ameacas')">⚠️ Ameaças</button>
+        <button class="btn bb" onclick="genAI('swot')">📋 SWOT</button>
+      </div>
+      <div class="tabs">
+        <div class="tab active" onclick="stab(this,'ti-hoje')">Atual</div>
+        <div class="tab" onclick="stab(this,'ti-hist')">Histórico</div>
+      </div>
+      <div id="ti-hoje">
+        <div id="ai-spin" class="spin-box" style="display:none"><div class="sp"></div>IA analisando...</div>
+        <div id="ai-res"></div>
+        <div id="ai-e" class="empty"><div class="ei">🤖</div><p>Clique em um botão acima para gerar análise com IA.<br><span style="font-size:12px;color:var(--text3)">Requer chave Google Gemini (gratuita)</span></p></div>
+      </div>
+      <div id="ti-hist" style="display:none">
+        <div id="ai-hist"></div>
+        <div id="ai-histe" class="empty"><div class="ei">📚</div><p>Nenhuma análise ainda.</p></div>
+      </div>
+    </div>
+
+    <!-- ALERTAS -->
+    <div class="page" id="page-alertas">
+      <div class="card">
+        <div class="chd"><span class="ct">Alertas</span><button class="btn bo bsm" onclick="clrAlerts()">✓ Todos lidos</button></div>
+        <div id="alrt-list"></div>
+        <div id="alrt-e" class="empty" style="display:none"><div class="ei">🔔</div><p>Nenhum alerta.</p></div>
+      </div>
+      <div class="card">
+        <div class="chd"><span class="ct">+ Criar Alerta Manual</span></div>
+        <div class="fgrid">
+          <div class="fg"><label>Tipo</label><select id="nat"><option value="alto">🔴 Alto</option><option value="medio">🟡 Médio</option><option value="info">🔵 Info</option></select></div>
+          <div class="fg"><label>Concorrente</label><input id="nac" placeholder="Nome..."></div>
+          <div class="fg ff"><label>Descrição *</label><input id="nad" placeholder="Ex: Lançou novo empreendimento..."></div>
+        </div>
+        <button class="btn bp" style="margin-top:10px" onclick="addAlertManual()">+ Criar Alerta</button>
+      </div>
+    </div>
+
+    <!-- CONFIG -->
+    <div class="page" id="page-config">
+      <div class="card">
+        <div class="chd"><span class="ct">🤖 Google Gemini IA (Gratuito)</span></div>
+        <div class="infob" style="margin-bottom:13px"><span>ℹ️</span>
+          <div><strong>100% gratuito.</strong> 15 análises/minuto, 1M tokens/dia, sem cartão. Crie a chave em <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">aistudio.google.com</a> em 2 minutos.</div>
+        </div>
+        <div class="fg" style="margin-bottom:9px"><label>Chave da API Gemini</label><input type="password" id="cfg-gem" placeholder="AIzaSy..."></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+          <button class="btn bp" onclick="saveGem()">💾 Salvar</button>
+          <button class="btn bo" onclick="testGem()">🧪 Testar</button>
+          <span id="gem-res" style="font-size:12px;color:var(--text2)"></span>
+        </div>
+        <div style="margin-top:13px;padding-top:13px;border-top:1px solid var(--border);font-size:12px;color:var(--text2);line-height:1.9">
+          <strong style="color:var(--text)">Como obter em 2 minutos:</strong><br>
+          1. Acesse <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">aistudio.google.com/app/apikey</a><br>
+          2. Login com Google → "Create API Key"<br>
+          3. Copie e cole acima → Salvar
+        </div>
+      </div>
+      <div class="card">
+        <div class="chd"><span class="ct">🎨 Aparência</span></div>
+        <div class="srow">
+          <div class="sinf"><div class="slbl">Tema</div><div class="sdsc">Alterne entre modo claro e escuro</div></div>
+          <div class="theme-btn" id="tbtn2" onclick="toggleTheme()">☀️ Claro</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="chd"><span class="ct">⚙️ Dados</span></div>
+        <div class="srow"><div class="sinf"><div class="slbl">Exportar backup</div><div class="sdsc">Baixar todos os dados em JSON</div></div><button class="btn bo bsm" onclick="expData()">⬇️ Exportar</button></div>
+        <div class="srow"><div class="sinf"><div class="slbl">Importar backup</div><div class="sdsc">Restaurar de um arquivo JSON</div></div><label class="btn bo bsm" style="cursor:pointer">⬆️ Importar<input type="file" accept=".json" onchange="impData(event)" style="display:none"></label></div>
+        <div class="srow"><div class="sinf"><div class="slbl" style="color:var(--red)">Limpar tudo</div><div class="sdsc">Remove todos os dados (irreversível)</div></div><button class="btn bsm" style="background:var(--red-dim);color:var(--red);border:1px solid var(--red)" onclick="clrAll()">🗑️</button></div>
+      </div>
+    </div>
+
+    <!-- GUIA -->
+    <div class="page" id="page-guia">
+      <div class="tabs">
+        <div class="tab active" onclick="stab(this,'gi-meta')">Meta Ads</div>
+        <div class="tab" onclick="stab(this,'gi-sites')">Sites</div>
+        <div class="tab" onclick="stab(this,'gi-ig')">Instagram</div>
+        <div class="tab" onclick="stab(this,'gi-gem')">Gemini IA</div>
+      </div>
+      <div id="gi-meta">
+        <div class="card"><div class="chd"><span class="ct">Opção 1 — Manual (zero configuração)</span></div>
+          <div style="font-size:13px;line-height:1.9;color:var(--text2)">
+            <p>1. Acesse <a href="https://www.facebook.com/ads/library" target="_blank" style="color:var(--blue)">facebook.com/ads/library</a></p>
+            <p>2. Pesquise o nome do concorrente</p>
+            <p>3. Filtre: País = Brasil • Status = Ativo • Categoria = Imóveis</p>
+            <p>4. Registre os anúncios encontrados na aba <strong style="color:var(--text)">Meta Ads</strong></p>
+            <p style="color:var(--green)">✅ Zero configuração. Zero custo. Disponível agora.</p>
+          </div>
+        </div>
+        <div class="card"><div class="chd"><span class="ct">Opção 2 — Apify (automático, 5x/mês grátis)</span></div>
+          <div style="font-size:13px;line-height:1.8">
+            <p style="color:var(--text2);margin-bottom:11px">Scraper que não precisa de conta Meta. Retorna JSON estruturado. <strong style="color:var(--yellow)">5 execuções gratuitas por mês.</strong></p>
+            <div class="step"><span class="snum">1</span><strong>Criar conta</strong> em <a href="https://apify.com" target="_blank" style="color:var(--blue)">apify.com</a> (login Google)</div>
+            <div class="step"><span class="snum">2</span><strong>Abrir o Actor</strong><div class="cb">https://apify.com/apidojo/facebook-ads-scraper</div></div>
+            <div class="step"><span class="snum">3</span><strong>Configurar input</strong><div class="cb">{"searchQuery":"Nome Concorrente","countryCode":"BR","adType":"ALL","activeStatus":"ACTIVE","maxItems":50}</div></div>
+            <div class="step"><span class="snum">4</span><strong>Executar</strong> (2-3 min) → <strong>Export → JSON</strong> → importar em Configurações → Importar</div>
+          </div>
+        </div>
+      </div>
+      <div id="gi-sites" style="display:none">
+        <div class="card"><div class="chd"><span class="ct">Visualping — Monitoramento Automático (5 grátis)</span></div>
+          <div style="font-size:13px;line-height:1.9;color:var(--text2)">
+            <p>1. Acesse <a href="https://visualping.io" target="_blank" style="color:var(--blue)">visualping.io</a> e crie conta</p>
+            <p>2. Cole a URL do site do concorrente</p>
+            <p>3. Frequência: a cada 24h • Notificação: e-mail</p>
+            <p>4. Repita para até 5 sites gratuitamente</p>
+            <p>5. Ao receber o e-mail de mudança, registre aqui na aba <strong style="color:var(--text)">Sites</strong></p>
+          </div>
+        </div>
+        <div class="card"><div class="chd"><span class="ct">ChangeTower — Alternativa (3 grátis)</span></div>
+          <div style="font-size:13px;line-height:1.9;color:var(--text2)">
+            <p>Acesse <a href="https://changetower.com" target="_blank" style="color:var(--blue)">changetower.com</a> — envia screenshots comparativos por e-mail quando houver mudança. Funciona bem para landing pages.</p>
+          </div>
+        </div>
+      </div>
+      <div id="gi-ig" style="display:none">
+        <div class="card"><div class="chd"><span class="ct">Phantombuster — Instagram Scraper (6x/mês grátis)</span></div>
+          <div style="font-size:13px;line-height:1.9;color:var(--text2)">
+            <p>1. Acesse <a href="https://phantombuster.com" target="_blank" style="color:var(--blue)">phantombuster.com</a></p>
+            <p>2. Use o Phantom <strong style="color:var(--text)">"Instagram Profile Scraper"</strong></p>
+            <p>3. 6 execuções/mês gratuitas — suficiente para análise semanal</p>
+            <p>4. Exporte resultado e registre os posts relevantes aqui</p>
+          </div>
+        </div>
+      </div>
+      <div id="gi-gem" style="display:none">
+        <div class="card"><div class="chd"><span class="ct">Google Gemini IA — 100% Gratuito</span></div>
+          <div style="background:var(--green-dim);border:1px solid var(--green);border-radius:8px;padding:11px;margin-bottom:13px;color:var(--green);font-size:13px">
+            ✅ Sem cartão. 15 análises/min. 1 milhão de tokens/dia de graça.
+          </div>
+          <div style="font-size:13px;line-height:1.9;color:var(--text2)">
+            <p>1. Acesse <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">aistudio.google.com/app/apikey</a></p>
+            <p>2. Login com conta Google</p>
+            <p>3. Clique em <strong style="color:var(--text)">"Create API Key"</strong></p>
+            <p>4. Copie a chave (começa com "AIzaSy...")</p>
+            <p>5. Cole em <strong style="color:var(--text)">Configurações → Gemini IA → Salvar</strong></p>
+            <p>6. Volte à aba <strong style="color:var(--text)">Análise IA</strong> e clique em "Resumo do Dia"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- MODAIS -->
+<div class="mov" id="m-comp"><div class="modal">
+  <h3>🏗️ Cadastrar Concorrente</h3>
+  <div class="fgrid">
+    <div class="fg"><label>Nome *</label><input id="nc1" placeholder="Construtora Alpha"></div>
+    <div class="fg"><label>Site *</label><input id="nc2" placeholder="alpha.com.br"></div>
+    <div class="fg"><label>Instagram</label><input id="nc3" placeholder="@construtora.alpha"></div>
+    <div class="fg"><label>Facebook Page</label><input id="nc4" placeholder="construtoralpha"></div>
+    <div class="fg"><label>Prioridade</label><select id="nc5"><option value="alta">🔴 Alta</option><option value="media">🟡 Média</option><option value="baixa">🟢 Baixa</option></select></div>
+    <div class="fg"><label>Segmento</label><select id="nc6"><option>MCMV</option><option>Médio padrão</option><option>Alto padrão</option><option>Todos</option></select></div>
+    <div class="fg ff"><label>Observações</label><input id="nc7" placeholder="Principal concorrente MCMV em Goiânia..."></div>
+  </div>
+  <div class="mft"><button class="btn bo" onclick="closeModal('m-comp')">Cancelar</button><button class="btn bp" onclick="addComp()">✅ Cadastrar</button></div>
+</div></div>
+
+<div class="mov" id="m-ad"><div class="modal">
+  <h3>📣 Registrar Anúncio Meta</h3>
+  <div class="fgrid">
+    <div class="fg"><label>Concorrente *</label><select id="na1"><option value="">Selecione...</option></select></div>
+    <div class="fg"><label>Tipo</label><select id="na2"><option>Imagem</option><option>Vídeo</option><option>Carrossel</option><option>Reels</option></select></div>
+    <div class="fg ff"><label>Título / Headline *</label><input id="na3" placeholder="Entrada em 36x"></div>
+    <div class="fg ff"><label>Texto do anúncio</label><textarea id="na4" placeholder="Corpo do anúncio..."></textarea></div>
+    <div class="fg"><label>CTA</label><input id="na5" placeholder="Saiba Mais"></div>
+    <div class="fg"><label>Oferta / Diferencial</label><input id="na6" placeholder="Taxa zero, MCMV..."></div>
+    <div class="fg ff"><label>URL (opcional)</label><input id="na7" placeholder="https://facebook.com/ads/library/..."></div>
+  </div>
+  <div class="mft"><button class="btn bo" onclick="closeModal('m-ad')">Cancelar</button><button class="btn bp" onclick="addAd()">✅ Registrar</button></div>
+</div></div>
+
+<div class="mov" id="m-site"><div class="modal">
+  <h3>🌐 Registrar Mudança em Site</h3>
+  <div class="fgrid">
+    <div class="fg"><label>Concorrente *</label><select id="ns1"><option value="">Selecione...</option></select></div>
+    <div class="fg"><label>Página</label><select id="ns2"><option>Homepage</option><option>Landing Page</option><option>Empreendimento</option><option>Sobre</option><option>Outra</option></select></div>
+    <div class="fg"><label>Tipo de Mudança</label><select id="ns3"><option>Novo empreendimento</option><option>Mudança de CTA</option><option>Nova oferta</option><option>Nova landing page</option><option>Mudança de preço</option><option>Outro</option></select></div>
+    <div class="fg"><label>Antes</label><input id="ns4" placeholder="Como era..."></div>
+    <div class="fg ff"><label>Depois *</label><input id="ns5" placeholder="O que mudou..."></div>
+    <div class="fg ff"><label>Observações</label><textarea id="ns6" placeholder="Contexto adicional..."></textarea></div>
+  </div>
+  <div class="mft"><button class="btn bo" onclick="closeModal('m-site')">Cancelar</button><button class="btn bp" onclick="addSite()">✅ Registrar</button></div>
+</div></div>
+
+<div class="mov" id="m-ig"><div class="modal">
+  <h3>📸 Registrar Post Instagram</h3>
+  <div class="fgrid">
+    <div class="fg"><label>Concorrente *</label><select id="ni1"><option value="">Selecione...</option></select></div>
+    <div class="fg"><label>Formato</label><select id="ni2"><option>Reels</option><option>Carrossel</option><option>Imagem</option><option>Story</option></select></div>
+    <div class="fg ff"><label>Caption</label><input id="ni3" placeholder="Texto do post..."></div>
+    <div class="fg"><label>Likes</label><input id="ni4" type="number" placeholder="0"></div>
+    <div class="fg"><label>Comentários</label><input id="ni5" type="number" placeholder="0"></div>
+    <div class="fg ff"><label>Link (opcional)</label><input id="ni6" placeholder="https://instagram.com/p/..."></div>
+  </div>
+  <div class="mft"><button class="btn bo" onclick="closeModal('m-ig')">Cancelar</button><button class="btn bp" onclick="addIG()">✅ Registrar</button></div>
+</div></div>
+
+<script>
+// ============ CONFIG ============
+const COLORS=['#58a6ff','#3fb950','#f0883e','#bc8cff','#e3b341','#f85149','#56d364','#ff7b72'];
+const AVD=['#0d2847','#1a3d22','#3d2100','#2d1f3a','#3d3000','#3d0f0b'];
+const AVL=['#ddf4ff','#dafbe1','#fff3e0','#f5f0ff','#fff8c5','#ffebe9'];
+const PTITLES={overview:['Visão Geral','Monitoramento dos concorrentes'],concorrentes:['Concorrentes','Gerencie os monitorados'],meta:['Meta Ads','Anúncios detectados'],sites:['Sites','Mudanças nas páginas'],instagram:['Instagram','Posts e engajamento'],ia:['Análise IA','Insights por IA'],alertas:['Alertas','Movimentos relevantes'],config:['Configurações','Configurações do sistema'],guia:['Guia de Coleta','Como coletar dados']};
+
+// ============ STATE ============
+let S={concorrentes:[],metaAds:[],siteChanges:[],instagram:[],aiResults:[],alertas:[],geminiKey:'',theme:'dark'};
+const today=()=>new Date().toLocaleDateString('pt-BR');
+const ci=(n)=>S.concorrentes.findIndex(c=>c.nome===n);
+const clr=(i)=>COLORS[i%COLORS.length];
+const avb=(i)=>S.theme==='dark'?AVD[i%AVD.length]:AVL[i%AVL.length];
+
+// ============ STORAGE ============
+function save(){localStorage.setItem('ic_ecov2',JSON.stringify(S))}
+function load(){
+  try{const d=localStorage.getItem('ic_ecov2');if(d)S={...S,...JSON.parse(d)}}catch(e){}
+  if(S.geminiKey)document.getElementById('cfg-gem').value=S.geminiKey;
+}
+
+// ============ THEME ============
+function applyTheme(t){
+  S.theme=t;document.documentElement.setAttribute('data-theme',t);
+  const lbl=t==='dark'?'☀️ Claro':'🌙 Escuro';
+  ['tbtn','tbtn2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=lbl});
+}
+function toggleTheme(){applyTheme(S.theme==='dark'?'light':'dark');save()}
+
+// ============ NAV ============
+document.querySelectorAll('.ni[data-p]').forEach(el=>el.addEventListener('click',()=>nav(el.dataset.p,el)));
+function nav(p,el){
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  (el||document.querySelector(`[data-p="${p}"]`)).classList.add('active');
+  const[t,s]=PTITLES[p];
+  document.getElementById('ptitle').textContent=t;
+  document.getElementById('psub').textContent=s;
+  render(p);
+}
+function stab(el,id){
+  el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const IDS=['ti-hoje','ti-hist','gi-meta','gi-sites','gi-ig','gi-gem'];
+  IDS.forEach(x=>{const e=document.getElementById(x);if(e)e.style.display=x===id?'block':'none'});
+}
+
+// ============ MODAL ============
+function openModal(id){popSels();document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.mov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+function popSels(){
+  ['na1','ns1','ni1'].forEach(sid=>{
+    const el=document.getElementById(sid);if(!el)return;
+    const cur=el.value;
+    el.innerHTML='<option value="">Selecione...</option>'+S.concorrentes.map(c=>`<option>${c.nome}</option>`).join('');
+    if(cur)el.value=cur;
+  });
+}
+
+// ============ ADD ============
+function addComp(){
+  const n=document.getElementById('nc1').value.trim();
+  const s=document.getElementById('nc2').value.trim();
+  if(!n||!s)return alert('Nome e Site são obrigatórios.');
+  S.concorrentes.push({id:Date.now(),nome:n,site:s.replace(/^https?:\/\//,''),instagram:document.getElementById('nc3').value.trim(),facebook:document.getElementById('nc4').value.trim(),prioridade:document.getElementById('nc5').value,segmento:document.getElementById('nc6').value,obs:document.getElementById('nc7').value.trim(),ativo:true});
+  ['nc1','nc2','nc3','nc4','nc7'].forEach(id=>document.getElementById(id).value='');
+  save();closeModal('m-comp');alert_add('info','🏗️',`${n} adicionado`,`Site: ${s}`);render('overview');badges();
+}
+function addAd(){
+  const c=document.getElementById('na1').value,t=document.getElementById('na3').value.trim();
+  if(!c||!t)return alert('Concorrente e Título obrigatórios.');
+  S.metaAds.push({id:Date.now(),data:today(),concorrente:c,titulo:t,texto:document.getElementById('na4').value.trim(),tipo:document.getElementById('na2').value,cta:document.getElementById('na5').value.trim(),oferta:document.getElementById('na6').value.trim(),url:document.getElementById('na7').value.trim()});
+  ['na3','na4','na5','na6','na7'].forEach(id=>document.getElementById(id).value='');
+  alert_add('medio','📣',`${c} — Novo anúncio`,t);save();closeModal('m-ad');render('meta');badges();
+}
+function addSite(){
+  const c=document.getElementById('ns1').value,d=document.getElementById('ns5').value.trim();
+  if(!c||!d)return alert('Concorrente e mudança obrigatórios.');
+  S.siteChanges.push({id:Date.now(),data:today(),concorrente:c,pagina:document.getElementById('ns2').value,tipo_mudanca:document.getElementById('ns3').value,antes:document.getElementById('ns4').value.trim(),depois:d,obs:document.getElementById('ns6').value.trim()});
+  ['ns4','ns5','ns6'].forEach(id=>document.getElementById(id).value='');
+  alert_add('medio','🌐',`${c} — Mudança no site`,d);save();closeModal('m-site');render('sites');badges();
+}
+function addIG(){
+  const c=document.getElementById('ni1').value;if(!c)return alert('Selecione o concorrente.');
+  S.instagram.push({id:Date.now(),data:today(),concorrente:c,tipo_post:document.getElementById('ni2').value,caption:document.getElementById('ni3').value.trim(),likes:parseInt(document.getElementById('ni4').value)||0,comentarios:parseInt(document.getElementById('ni5').value)||0,url:document.getElementById('ni6').value.trim()});
+  ['ni3','ni4','ni5','ni6'].forEach(id=>document.getElementById(id).value='');
+  save();closeModal('m-ig');render('instagram');
+}
+function addAlertManual(){
+  const d=document.getElementById('nad').value.trim();if(!d)return alert('Preencha a descrição.');
+  const c=document.getElementById('nac').value.trim(),tp=document.getElementById('nat').value;
+  alert_add(tp,tp==='alto'?'🚨':tp==='medio'?'⚠️':'ℹ️',c?`${c} — ${d}`:d,'');
+  document.getElementById('nad').value='';document.getElementById('nac').value='';
+}
+function alert_add(tipo,icone,titulo,detalhe){
+  S.alertas.unshift({id:Date.now(),tipo,icone,titulo,detalhe,data:today(),lido:false});
+  if(S.alertas.length>50)S.alertas=S.alertas.slice(0,50);
+  save();badges();
+}
+function markRead(id){const a=S.alertas.find(x=>x.id===id);if(a){a.lido=true;save();rAlertas();badges()}}
+function clrAlerts(){S.alertas.forEach(a=>a.lido=true);save();rAlertas();badges()}
+function rm(arr,id){S[arr]=S[arr].filter(x=>x.id!==id);save()}
+
+// ============ BADGES ============
+function badges(){
+  const ta=S.metaAds.filter(a=>a.data===today()).length;
+  const ts=S.siteChanges.filter(s=>s.data===today()).length;
+  const un=S.alertas.filter(a=>!a.lido).length;
+  document.getElementById('bdg-meta').textContent=ta;
+  document.getElementById('bdg-sites').textContent=ts;
+  document.getElementById('bdg-alrt').textContent=un;
+  document.getElementById('s1').textContent=S.concorrentes.length;
+  document.getElementById('s2').textContent=S.metaAds.length;
+  document.getElementById('s3').textContent=S.siteChanges.length;
+  document.getElementById('s4').textContent=un;
+  document.getElementById('s2s').textContent=`${ta} hoje`;
+  document.getElementById('s3s').textContent=`${ts} hoje`;
+  const gmOk=!!S.geminiKey;
+  document.getElementById('gm-txt').innerHTML=gmOk
+    ?'✅ <strong>Google Gemini configurado.</strong> IA pronta. Clique nos botões para gerar análises.'
+    :'Configure sua chave do <strong>Google Gemini</strong> (gratuita) em Configurações. <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">Obter grátis →</a>';
+}
+
+// ============ RENDER DISPATCH ============
+function render(p){
+  if(p==='overview')rOverview();
+  else if(p==='concorrentes')rComps();
+  else if(p==='meta')renderMeta();
+  else if(p==='sites')rSites();
+  else if(p==='instagram')rIG();
+  else if(p==='ia')rIA();
+  else if(p==='alertas')rAlertas();
+}
+function doRefresh(){document.getElementById('last-t').textContent=new Date().toLocaleTimeString('pt-BR');const a=document.querySelector('.ni.active');if(a)render(a.dataset.p)}
+
+// ============ OVERVIEW ============
+function rOverview(){
+  badges();
+  // activity bars
+  const el=document.getElementById('act-bars');
+  if(!S.concorrentes.length){el.innerHTML='<div style="color:var(--text2);font-size:13px">Cadastre concorrentes para ver.</div>';return}
+  const sc=S.concorrentes.map((c,i)=>{
+    const a=S.metaAds.filter(x=>x.concorrente===c.nome).length;
+    const s=S.siteChanges.filter(x=>x.concorrente===c.nome).length;
+    const g=S.instagram.filter(x=>x.concorrente===c.nome).length;
+    return{nome:c.nome,v:Math.min(100,a*15+s*20+g*10),c:clr(i)};
+  }).sort((a,b)=>b.v-a.v);
+  const mx=Math.max(...sc.map(x=>x.v),1);
+  el.innerHTML=sc.map(x=>`<div class="pr"><div class="pl"><span>${x.nome}</span><span style="color:${x.c};font-weight:600">${x.v}pts</span></div><div class="pb"><div class="pf" style="width:${(x.v/mx)*100}%;background:${x.c}"></div></div></div>`).join('');
+  // comp cards
+  const grd=document.getElementById('ov-grid'),emp=document.getElementById('ov-empty');
+  if(!S.concorrentes.length){grd.style.display='none';emp.style.display='block'}
+  else{grd.style.display='grid';emp.style.display='none';
+    grd.innerHTML=S.concorrentes.map((c,i)=>{
+      const a=S.metaAds.filter(x=>x.concorrente===c.nome&&x.data===today()).length;
+      const s=S.siteChanges.filter(x=>x.concorrente===c.nome&&x.data===today()).length;
+      const g=S.instagram.filter(x=>x.concorrente===c.nome&&x.data===today()).length;
+      const sc2=Math.min(100,S.metaAds.filter(x=>x.concorrente===c.nome).length*15+S.siteChanges.filter(x=>x.concorrente===c.nome).length*20);
+      return`<div class="cc"><div class="cct"><div class="av" style="background:${avb(i)};color:${clr(i)}">${c.nome[0]}</div><div><div class="ccn">${c.nome}</div><div class="ccs">${c.site}</div></div></div>
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:7px"><div class="ccsb"><div class="ccsf" style="width:${sc2}%;background:${clr(i)}"></div></div><span style="font-size:10px;color:${clr(i)};font-weight:600">${sc2}</span></div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        ${a?`<span class="tag tb">📣${a}</span>`:''}
+        ${s?`<span class="tag to">🌐</span>`:''}
+        ${g?`<span class="tag tp">📸${g}</span>`:''}
+        ${!a&&!s&&!g?'<span class="tag tgr">sem ativ.</span>':''}
+      </div></div>`;
+    }).join('');
+  }
+  // top alerts
+  document.getElementById('top-alts').innerHTML=S.alertas.filter(a=>!a.lido&&a.tipo==='alto').slice(0,2).map(a=>`<div class="ab" style="background:var(--red-dim);border:1px solid var(--red);margin-bottom:9px"><span class="ai2">${a.icone}</span><div class="abody"><strong>${a.titulo}</strong>${a.detalhe}</div></div>`).join('');
+  // timeline
+  const tl=document.getElementById('tl'),tle=document.getElementById('tl-e');
+  const evs=[
+    ...S.metaAds.filter(x=>x.data===today()).map(x=>({c:'var(--blue)',e:`${x.concorrente} — Novo anúncio`,d:x.titulo})),
+    ...S.siteChanges.filter(x=>x.data===today()).map(x=>({c:'var(--orange)',e:`${x.concorrente} — ${x.tipo_mudanca}`,d:x.depois})),
+    ...S.instagram.filter(x=>x.data===today()).map(x=>({c:'var(--purple)',e:`${x.concorrente} — ${x.tipo_post}`,d:`❤️${x.likes} 💬${x.comentarios}`}))
+  ];
+  if(!evs.length){tl.innerHTML='';tle.style.display='block'}
+  else{tle.style.display='none';tl.innerHTML=evs.map(x=>`<div class="tli"><div class="tldot" style="background:${x.c}"></div><div><div class="tlev">${x.e}</div><div class="tldet">${x.d}</div></div></div>`).join('')}
+}
+
+// ============ CONCORRENTES ============
+function rComps(){
+  const tb=document.getElementById('comp-tb');
+  if(!S.concorrentes.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:26px">Nenhum. <a href="#" onclick="openModal(\'m-comp\')" style="color:var(--blue)">Adicionar →</a></td></tr>';return}
+  tb.innerHTML=S.concorrentes.map((c,i)=>{
+    const sc=Math.min(100,S.metaAds.filter(x=>x.concorrente===c.nome).length*15+S.siteChanges.filter(x=>x.concorrente===c.nome).length*20);
+    const libUrl=`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=${encodeURIComponent(c.nome)}`;
+    return`<tr>
+      <td><div class="tdf"><div class="av" style="background:${avb(i)};color:${clr(i)}">${c.nome[0]}</div><div><div style="font-weight:600">${c.nome}</div><div style="font-size:11px;color:var(--text2)">${c.segmento||''}</div></div></div></td>
+      <td><a href="https://${c.site}" target="_blank" style="color:var(--blue);font-size:12px">${c.site}</a></td>
+      <td style="font-size:12px">${c.instagram||'—'}</td>
+      <td><a href="${libUrl}" target="_blank" class="tag tb" style="text-decoration:none">🔗 Ver Ads</a></td>
+      <td><span class="tag ${c.prioridade==='alta'?'tr':c.prioridade==='media'?'ty':'tg'}">${c.prioridade}</span></td>
+      <td><div style="display:flex;align-items:center;gap:5px"><div style="width:48px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="width:${sc}%;height:100%;background:${clr(i)};border-radius:2px"></div></div><span style="font-size:11px;color:var(--text2)">${sc}</span></div></td>
+      <td><button class="btn bo bsm" onclick="if(confirm('Remover?')){rm('concorrentes',${c.id});rComps();badges()}">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ============ META ADS ============
+function renderMeta(){
+  const fv=document.getElementById('mf').value;
+  const ads=fv?S.metaAds.filter(a=>a.concorrente===fv):S.metaAds;
+  document.getElementById('m1').textContent=S.metaAds.length;
+  document.getElementById('m2').textContent=S.metaAds.filter(a=>a.data===today()).length;
+  document.getElementById('m3').textContent=S.metaAds.filter(a=>['Vídeo','Reels'].includes(a.tipo)).length;
+  const byc=S.concorrentes.map(c=>({n:c.nome,ct:S.metaAds.filter(a=>a.concorrente===c.nome).length})).sort((a,b)=>b.ct-a.ct);
+  document.getElementById('m4').textContent=byc[0]?.n?.split(' ')[0]||'—';
+  const sel=document.getElementById('mf'),cur=sel.value;
+  sel.innerHTML='<option value="">Todos</option>'+S.concorrentes.map(c=>`<option>${c.nome}</option>`).join('');
+  if(cur)sel.value=cur;
+  const grd=document.getElementById('adgrid'),emp=document.getElementById('ad-e');
+  if(!ads.length){grd.innerHTML='';emp.style.display='block'}
+  else{emp.style.display='none';
+    grd.innerHTML=ads.map(a=>{
+      const ix=ci(a.concorrente);
+      return`<div class="adc"><div class="adct"><div class="tdf" style="gap:5px"><div class="av" style="background:${avb(ix<0?0:ix)};color:${clr(ix<0?0:ix)};width:20px;height:20px;font-size:9px">${a.concorrente[0]}</div><span style="font-size:11px;color:var(--text2)">${a.concorrente}</span></div><span class="tag tgr">${a.tipo}</span></div>
+      <div class="adtitle">${a.titulo}</div>
+      <div class="adtxt">${a.texto||'—'}</div>
+      <div class="adf">
+        ${a.cta?`<span class="tag tb">${a.cta}</span>`:''}
+        ${a.oferta?`<span class="tag tg">${a.oferta}</span>`:''}
+        <span style="font-size:10px;color:var(--text3);margin-left:auto">${a.data}</span>
+        ${a.url?`<a href="${a.url}" target="_blank" style="color:var(--blue);font-size:10px">🔗</a>`:''}
+      </div>
+      <button onclick="rm('metaAds',${a.id});renderMeta()" style="margin-top:7px;background:none;border:none;cursor:pointer;font-size:10px;color:var(--text3)">🗑️ remover</button>
+      </div>`;
+    }).join('');
+  }
+  const mx=Math.max(...byc.map(b=>b.ct),1);
+  document.getElementById('m-bars').innerHTML=byc.length?byc.map((b,i)=>`<div class="pr"><div class="pl"><span>${b.n}</span><span style="color:${clr(i)};font-weight:600">${b.ct} ads</span></div><div class="pb"><div class="pf" style="width:${(b.ct/mx)*100}%;background:${clr(i)}"></div></div></div>`).join(''):'<div style="color:var(--text2);font-size:13px">Cadastre concorrentes.</div>';
+  const lk=document.getElementById('m-links');
+  lk.innerHTML=S.concorrentes.length?`<div style="display:flex;flex-wrap:wrap;gap:7px">`+S.concorrentes.map((c,i)=>{
+    const fb=c.facebook?`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&search_type=page&q=${encodeURIComponent(c.facebook)}`:`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=${encodeURIComponent(c.nome)}`;
+    return`<a href="${fb}" target="_blank" class="btn bo bsm" style="color:${clr(i)};border-color:${clr(i)}">📣 ${c.nome}</a>`;
+  }).join('')+'</div>':'<div style="color:var(--text2);font-size:13px">Cadastre concorrentes.</div>';
+}
+
+// ============ SITES ============
+function rSites(){
+  const tb=document.getElementById('site-tb'),emp=document.getElementById('site-e');
+  if(!S.siteChanges.length){tb.innerHTML='';emp.style.display='block'}
+  else{emp.style.display='none';
+    tb.innerHTML=S.siteChanges.map(s=>{const i=ci(s.concorrente);return`<tr>
+      <td><div class="tdf"><div class="av" style="background:${avb(i<0?0:i)};color:${clr(i<0?0:i)}">${s.concorrente[0]}</div>${s.concorrente}</div></td>
+      <td style="font-size:12px">${s.pagina}</td><td><span class="tag to">${s.tipo_mudanca}</span></td>
+      <td style="font-size:12px;color:var(--text2)">${s.antes||'—'}</td>
+      <td style="font-size:12px;color:var(--green)">${s.depois}</td>
+      <td style="font-size:12px;color:var(--text2)">${s.data}</td>
+      <td><button onclick="rm('siteChanges',${s.id});rSites()" style="background:none;border:none;cursor:pointer;color:var(--text3)">🗑️</button></td>
+    </tr>`;}).join('');
+  }
+  document.getElementById('s-links').innerHTML=S.concorrentes.length?`<div style="display:flex;flex-wrap:wrap;gap:7px">`+S.concorrentes.map((c,i)=>`<a href="https://${c.site}" target="_blank" class="btn bo bsm" style="color:${clr(i)};border-color:${clr(i)}">🌐 ${c.nome}</a>`).join('')+'</div>':'<div style="color:var(--text2);font-size:13px">Cadastre concorrentes.</div>';
+}
+
+// ============ INSTAGRAM ============
+function rIG(){
+  const ps=S.instagram;
+  document.getElementById('ig1').textContent=ps.length;
+  const te=[...ps].sort((a,b)=>(b.likes+b.comentarios)-(a.likes+a.comentarios))[0];
+  document.getElementById('ig2').textContent=te?te.concorrente.split(' ')[0]:'—';
+  const fm={};ps.forEach(p=>fm[p.tipo_post]=(fm[p.tipo_post]||0)+1);
+  const tf=Object.entries(fm).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('ig3').textContent=tf?tf[0]:'—';
+  document.getElementById('ig4').textContent=ps.length?Math.round(ps.reduce((s,p)=>s+p.likes,0)/ps.length).toLocaleString('pt-BR'):'0';
+  const tb=document.getElementById('ig-tb'),emp=document.getElementById('ig-e');
+  if(!ps.length){tb.innerHTML='';emp.style.display='block'}
+  else{emp.style.display='none';
+    tb.innerHTML=ps.map(p=>{const i=ci(p.concorrente);return`<tr>
+      <td><div class="tdf"><div class="av" style="background:${avb(i<0?0:i)};color:${clr(i<0?0:i)}">${p.concorrente[0]}</div>${p.concorrente}</div></td>
+      <td><span class="tag tp">${p.tipo_post}</span></td>
+      <td style="font-size:12px">${p.caption||'—'}</td>
+      <td style="font-weight:600;color:var(--red)">❤️${p.likes.toLocaleString('pt-BR')}</td>
+      <td>💬${p.comentarios}</td><td style="font-size:12px;color:var(--text2)">${p.data}</td>
+      <td><button onclick="rm('instagram',${p.id});rIG()" style="background:none;border:none;cursor:pointer;color:var(--text3)">🗑️</button></td>
+    </tr>`;}).join('');
+  }
+  document.getElementById('ig-links').innerHTML=S.concorrentes.length?`<div style="display:flex;flex-wrap:wrap;gap:7px">`+S.concorrentes.map((c,i)=>{
+    const h=c.instagram?c.instagram.replace('@',''):'';
+    const u=h?`https://instagram.com/${h}`:`https://instagram.com/explore/search/?q=${encodeURIComponent(c.nome)}`;
+    return`<a href="${u}" target="_blank" class="btn bo bsm" style="color:${clr(i)};border-color:${clr(i)}">📸 ${c.nome}</a>`;
+  }).join('')+'</div>':'<div style="color:var(--text2);font-size:13px">Cadastre concorrentes.</div>';
+}
+
+// ============ IA ============
+function rIA(){rAIHist()}
+function rAIHist(){
+  const h=document.getElementById('ai-hist'),e=document.getElementById('ai-histe');
+  if(!S.aiResults.length){h.innerHTML='';e.style.display='block'}
+  else{e.style.display='none';h.innerHTML=S.aiResults.slice(0,10).map(r=>`<div class="aib" style="margin-bottom:11px"><div class="aihd"><span>🤖</span><span class="ait">${r.tipo}</span><span class="aid">${r.data}</span></div><div class="aix">${r.texto}</div></div>`).join('')}
+}
+
+// ============ ALERTAS ============
+function rAlertas(){
+  const el=document.getElementById('alrt-list'),emp=document.getElementById('alrt-e');
+  if(!S.alertas.length){el.innerHTML='';emp.style.display='block';return}
+  emp.style.display='none';
+  const CLS={alto:['var(--red-dim)','var(--red)'],medio:['var(--orange-dim)','var(--orange)'],info:['var(--blue-dim)','var(--blue)']};
+  el.innerHTML=S.alertas.map(a=>{const[bg,bd]=CLS[a.tipo]||CLS.info;return`<div class="ab" style="background:${bg};border:1px solid ${bd};${a.lido?'opacity:.4':''}">
+    <span class="ai2">${a.icone}</span>
+    <div class="abody" style="flex:1"><strong>${a.titulo}</strong>${a.detalhe?`<span style="color:var(--text2)">${a.detalhe}</span>`:''}
+    <div style="font-size:10px;color:var(--text3);margin-top:2px">${a.data}</div></div>
+    ${!a.lido?`<button class="btn bo bsm" onclick="markRead(${a.id})">✓</button>`:''}
+  </div>`;}).join('');
+}
+
+// ============ GEMINI ============
+function saveGem(){
+  S.geminiKey=document.getElementById('cfg-gem').value.trim();save();badges();
+  document.getElementById('gem-res').textContent='✅ Salvo!';
+  setTimeout(()=>document.getElementById('gem-res').textContent='',2500);
+}
+async function testGem(){
+  const k=document.getElementById('cfg-gem').value.trim()||S.geminiKey;
+  if(!k)return alert('Cole a chave primeiro.');
+  document.getElementById('gem-res').textContent='⏳ Testando...';
+  try{const r=await callGemini('Responda somente: "OK"',k);document.getElementById('gem-res').textContent='✅ Conectado: '+r.substring(0,20);}
+  catch(e){document.getElementById('gem-res').textContent='❌ '+e.message;}
+}
+async function callGemini(prompt,key){
+  const k=key||S.geminiKey;if(!k)throw new Error('Chave não configurada');
+  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+  if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'Erro API')}
+  const d=await r.json();return d.candidates?.[0]?.content?.parts?.[0]?.text||'Sem resposta';
+}
+function buildData(){
+  return[
+    ...S.metaAds.slice(-20).map(a=>`[Meta Ad] ${a.concorrente}: "${a.titulo}" | Tipo:${a.tipo} | Oferta:${a.oferta||'—'}`),
+    ...S.siteChanges.slice(-10).map(s=>`[Site] ${s.concorrente} | ${s.tipo_mudanca} em ${s.pagina}: "${s.depois}"`),
+    ...S.instagram.slice(-10).map(p=>`[Instagram] ${p.concorrente}: ${p.tipo_post} | "${p.caption}" | ❤️${p.likes}`)
+  ].join('\n');
+}
+async function genAI(tipo){
+  if(!S.geminiKey)return alert('Configure a chave Gemini em Configurações.');
+  const data=buildData();if(!data)return alert('Registre dados primeiro.');
+  document.getElementById('ai-spin').style.display='flex';
+  document.getElementById('ai-e').style.display='none';
+  document.getElementById('ai-res').innerHTML='';
+  const LABELS={diario:'Resumo do Dia',oportunidades:'Oportunidades',ameacas:'Análise de Ameaças',swot:'SWOT dos Concorrentes'};
+  const PROMPTS={
+    diario:`Você é analista de mercado sênior imobiliário. Analise os dados de monitoramento e escreva resumo executivo em português com parágrafos. Estruture: (1) Principais movimentos, (2) Padrões, (3) Alertas, (4) Implicações para a Ecovita. Seja direto.\n\nDADOS:\n${data}`,
+    oportunidades:`Você é estrategista imobiliário. Com os dados dos concorrentes, identifique oportunidades não exploradas para a Ecovita. Para cada uma: o que é, por que existe, ação recomendada, urgência. Use português direto.\n\nDADOS:\n${data}`,
+    ameacas:`Você é analista de inteligência competitiva. Identifique as principais ameaças e movimentos agressivos dos concorrentes que requerem atenção da Ecovita. Cite nomes e dados específicos.\n\nDADOS:\n${data}`,
+    swot:`Você é consultor estratégico imobiliário. Faça SWOT dos concorrentes com base nos dados. Depois indique onde a Ecovita tem vantagem e onde precisa melhorar.\n\nDADOS:\n${data}`
+  };
+  try{
+    const resp=await callGemini(PROMPTS[tipo]);
+    document.getElementById('ai-spin').style.display='none';
+    const html=resp.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+    document.getElementById('ai-res').innerHTML=`<div class="aib"><div class="aihd"><span>🤖</span><span class="ait">${LABELS[tipo]}</span><span class="aid">${today()}</span></div><div class="aix">${html}</div></div>`;
+    S.aiResults.unshift({tipo:LABELS[tipo],data:today(),texto:html});
+    if(S.aiResults.length>20)S.aiResults=S.aiResults.slice(0,20);
+    save();
+  }catch(e){
+    document.getElementById('ai-spin').style.display='none';
+    document.getElementById('ai-res').innerHTML=`<div class="ab" style="background:var(--red-dim);border:1px solid var(--red)"><span class="ai2">❌</span><div class="abody"><strong>Erro</strong>${e.message}</div></div>`;
+  }
+}
+
+// ============ EXPORT/IMPORT ============
+function expData(){
+  const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download=`ic_ecovita_${today().replace(/\//g,'-')}.json`;a.click();
+}
+function impData(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    try{const im=JSON.parse(ev.target.result);
+      if(confirm(`Importar ${im.concorrentes?.length||0} concorrentes e ${im.metaAds?.length||0} anúncios?`)){
+        S={...S,...im};save();render('overview');badges();alert('✅ Importado!');
+      }
+    }catch{alert('❌ Arquivo inválido.')}
+  };r.readAsText(f);
+}
+function clrAll(){if(confirm('Remover TUDO?')){S={concorrentes:[],metaAds:[],siteChanges:[],instagram:[],aiResults:[],alertas:[],geminiKey:'',theme:S.theme};save();render('overview');badges()}}
+
+// ============ INIT ============
+window.onload=()=>{
+  load();applyTheme(S.theme||'dark');
+  document.getElementById('last-t').textContent=new Date().toLocaleString('pt-BR');
+  badges();rOverview();
+};
+</script>
+</body>
+</html>
