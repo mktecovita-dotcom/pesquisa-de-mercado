@@ -7,7 +7,7 @@
 <style>
 [data-theme="dark"]{--bg:#0d1117;--bg2:#161b22;--bg3:#1c2333;--bg4:#21262d;--border:#30363d;--text:#e6edf3;--text2:#8b949e;--text3:#6e7681;--shadow:0 1px 4px rgba(0,0,0,.4)}
 [data-theme="light"]{--bg:#f6f8fa;--bg2:#ffffff;--bg3:#f0f2f4;--bg4:#e8eaed;--border:#d0d7de;--text:#1f2328;--text2:#636c76;--text3:#9198a1;--shadow:0 1px 4px rgba(0,0,0,.1)}
-:root{--green:#3fb950;--blue:#58a6ff;--orange:#f0883e;--red:#f85149;--purple:#bc8cff;--yellow:#e3b341;--teal:#39d353;--accent:#238636;--accent-h:#2ea043;--sw:226px}
+:root{--green:#3fb950;--blue:#58a6ff;--orange:#f0883e;--red:#f85149;--purple:#bc8cff;--yellow:#e3b341;--teal:#39d353;--accent:#238636;--accent-h:#2ea043;--sw:230px}
 [data-theme="dark"]{--gd:#1a3d22;--bd:#0d2847;--od:#3d2100;--rd:#3d0f0b;--pd:#2d1f3a;--yd:#3d3000}
 [data-theme="light"]{--gd:#dafbe1;--bd:#ddf4ff;--od:#fff3e0;--rd:#ffebe9;--pd:#f5f0ff;--yd:#fff8c5}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -24,9 +24,9 @@ nav{flex:1;padding:5px 0;overflow-y:auto}
 .sbf{padding:10px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);line-height:1.5}
 .sbf strong{color:var(--green)}
 #main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.tb{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:10px}
+.tb{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .tb h2{font-size:15px;font-weight:600;flex:1}.tsub{font-size:12px;color:var(--text2)}
-.btn{padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .15s}
+.btn{padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .15s;white-space:nowrap}
 .bp{background:var(--accent);color:#fff;border-color:var(--accent)}.bp:hover{background:var(--accent-h)}
 .bo{background:transparent;color:var(--text);border-color:var(--border)}.bo:hover{background:var(--bg3)}
 .bb{background:var(--bd);color:var(--blue);border-color:var(--blue)}.bb:hover{opacity:.85}
@@ -37,14 +37,14 @@ nav{flex:1;padding:5px 0;overflow-y:auto}
 .content{flex:1;overflow-y:auto;padding:20px}
 .page{display:none}.page.active{display:block}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:17px;margin-bottom:13px;box-shadow:var(--shadow)}
-.chd{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.chd{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;gap:8px}
 .ct{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
 .stat{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:15px 17px}
 .sl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
 .sv{font-size:25px;font-weight:700;line-height:1}.ss{font-size:11px;color:var(--text2);margin-top:4px}.ss.up{color:var(--green)}
-.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid}
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;border:1px solid;cursor:default}
 .tbl{background:var(--bd);color:var(--blue);border-color:var(--blue)}
 .tgr{background:var(--gd);color:var(--green);border-color:var(--green)}
 .tor{background:var(--od);color:var(--orange);border-color:var(--orange)}
@@ -71,25 +71,37 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
 .ait{font-size:13px;font-weight:600;color:var(--blue)}.aid{font-size:11px;color:var(--text2);margin-left:auto}
 .aix{font-size:13px;line-height:1.8}
 .aix p{margin-bottom:7px}.aix p:last-child{margin-bottom:0}
-.scanbox{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:15px;margin-bottom:11px}
-.scanbox.changed{border-color:var(--orange)}
+/* Scan boxes */
+.scanbox{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:13px}
+.scanbox.changed{border-color:var(--orange);background:var(--od)}
 .scanbox.fresh{border-color:var(--green)}
-.scan-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.scan-hd{display:flex;align-items:center;gap:10px;margin-bottom:11px}
 .scan-name{font-size:14px;font-weight:600;flex:1}
 .scan-date{font-size:11px;color:var(--text2)}
-.scan-meta{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-.scan-pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px}
+.scan-meta{display:flex;gap:6px;margin-bottom:11px;flex-wrap:wrap}
+.scan-pill{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 9px;border-radius:10px}
 .sp-ok{background:var(--gd);color:var(--green);border:1px solid var(--green)}
 .sp-chg{background:var(--od);color:var(--orange);border:1px solid var(--orange)}
 .sp-pend{background:var(--bg4);color:var(--text2);border:1px solid var(--border)}
 .sp-err{background:var(--rd);color:var(--red);border:1px solid var(--red)}
+/* City tags */
+.city-tag{display:inline-flex;align-items:center;gap:4px;background:var(--pd);color:var(--purple);border:1px solid var(--purple);border-radius:10px;font-size:10px;font-weight:600;padding:2px 8px}
+/* Progress */
 .spin-row{display:flex;align-items:center;gap:9px;color:var(--text2);font-size:13px;padding:10px 0}
 .sp{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
+/* Steps progress */
+.steps{display:flex;flex-direction:column;gap:5px;margin:10px 0}
+.step{display:flex;align-items:center;gap:8px;font-size:12px;padding:5px 8px;border-radius:6px;color:var(--text2)}
+.step.running{background:var(--bd);color:var(--blue)}.step.done{color:var(--green)}.step.error{color:var(--red)}
+.step-icon{width:16px;text-align:center;flex-shrink:0}
+/* Alerts */
 .ab{display:flex;align-items:flex-start;gap:10px;border-radius:8px;padding:11px 13px;margin-bottom:9px}
 .ai2{font-size:14px;flex-shrink:0;margin-top:1px}.abody{font-size:13px;line-height:1.5;flex:1}
 .abody strong{display:block;margin-bottom:2px}
+/* Info box */
 .infob{display:flex;gap:10px;background:var(--bd);border:1px solid var(--blue);border-radius:8px;padding:11px 13px;margin-bottom:13px;font-size:13px;line-height:1.6}
+/* Forms */
 .fg{display:flex;flex-direction:column;gap:4px}
 .fg label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
 .fg input,.fg select,.fg textarea{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;padding:7px 11px;outline:none;transition:border-color .15s;font-family:inherit;width:100%}
@@ -97,32 +109,51 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
 .fg textarea{resize:vertical;min-height:70px}
 .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .ff{grid-column:1/-1}
-.mov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:1000;align-items:center;justify-content:center}
+/* City input area */
+.city-input-row{display:flex;gap:6px;align-items:center}
+.city-input-row input{flex:1}
+.city-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;min-height:24px}
+.city-chip{display:inline-flex;align-items:center;gap:5px;background:var(--pd);color:var(--purple);border:1px solid var(--purple);border-radius:12px;font-size:11px;font-weight:600;padding:3px 10px}
+.city-chip button{background:none;border:none;cursor:pointer;color:var(--purple);font-size:13px;padding:0;line-height:1;opacity:.7}
+.city-chip button:hover{opacity:1}
+/* Modals */
+.mov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:center;justify-content:center}
 .mov.open{display:flex}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;width:580px;max-width:95vw;max-height:90vh;overflow-y:auto}
-.modal h3{font-size:14px;font-weight:600;margin-bottom:16px}
-.mft{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:22px;width:600px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal h3{font-size:15px;font-weight:700;margin-bottom:16px}
+.mft{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+/* Tabs */
 .tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
 .tab{padding:7px 13px;cursor:pointer;font-size:13px;color:var(--text2);border-bottom:2px solid transparent;transition:all .15s}
 .tab:hover{color:var(--text)}.tab.active{color:var(--text);border-bottom-color:var(--blue)}
+/* Toggles */
 .tog{width:37px;height:20px;background:var(--border);border-radius:10px;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
 .tog.on{background:var(--accent)}.tog::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s}.tog.on::after{left:19px}
 .srow{display:flex;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:13px}.srow:last-child{border-bottom:none}
 .sinf{flex:1}.slbl{font-size:13px;font-weight:500}.sdsc{font-size:12px;color:var(--text2);margin-top:2px}
+/* Competitor cards */
+.cc{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;transition:border-color .2s}
+.cc:hover{border-color:var(--blue)}
+.cct{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.ccn{font-size:13px;font-weight:600}.ccs{font-size:11px;color:var(--text2)}
+.ccsb{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.ccsf{height:100%;border-radius:2px}
+/* Ad cards */
 .adgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:11px}
 .adc{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px}
 .adtop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
 .adtitle{font-size:13px;font-weight:600;margin-bottom:4px}
 .adtxt{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:7px}
 .adf{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
-.cc{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:13px;transition:border-color .2s}
-.cc:hover{border-color:var(--blue)}
-.cct{display:flex;align-items:center;gap:9px;margin-bottom:9px}
-.ccn{font-size:13px;font-weight:600}.ccs{font-size:11px;color:var(--text2)}
-.ccsb{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
-.ccsf{height:100%;border-radius:2px}
+/* Empty */
 .empty{text-align:center;padding:36px 18px;color:var(--text2)}
 .ei{font-size:34px;margin-bottom:9px}.empty p{font-size:13px;margin-bottom:13px;line-height:1.6}
+/* Radar result sections */
+.res-section{background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-top:10px;overflow:hidden}
+.res-sec-hd{display:flex;align-items:center;gap:8px;padding:10px 13px;cursor:pointer;user-select:none;font-size:12px;font-weight:600;color:var(--text2)}
+.res-sec-hd:hover{background:var(--bg3);color:var(--text)}
+.res-sec-body{padding:13px;border-top:1px solid var(--border);font-size:12px;color:var(--text2);line-height:1.8;max-height:220px;overflow-y:auto}
+/* Scrollbar */
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 </style>
 </head>
@@ -136,39 +167,40 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
   </div>
   <nav>
     <div class="ns">Monitoramento</div>
-    <div class="ni active" data-p="overview"><span>📊</span> Visão Geral</div>
-    <div class="ni" data-p="concorrentes"><span>🏗️</span> Concorrentes</div>
-    <div class="ni" data-p="radar"><span>🔍</span> Radar Web <span class="nb" id="bdg-radar"></span></div>
-    <div class="ni" data-p="meta"><span>📣</span> Meta Ads <span class="nb" id="bdg-meta"></span></div>
-    <div class="ni" data-p="sites"><span>🌐</span> Sites <span class="nb" id="bdg-sites"></span></div>
-    <div class="ni" data-p="instagram"><span>📸</span> Instagram</div>
+    <div class="ni active" data-p="overview">📊 Visão Geral</div>
+    <div class="ni" data-p="concorrentes">🏗️ Concorrentes</div>
+    <div class="ni" data-p="radar">🔍 Radar Web <span class="nb" id="bdg-radar"></span></div>
+    <div class="ni" data-p="meta">📣 Meta Ads <span class="nb" id="bdg-meta"></span></div>
+    <div class="ni" data-p="sites">🌐 Sites <span class="nb" id="bdg-sites"></span></div>
+    <div class="ni" data-p="instagram">📸 Instagram</div>
     <div class="ns">Inteligência</div>
-    <div class="ni" data-p="ia"><span>🤖</span> Análise IA</div>
-    <div class="ni" data-p="alertas"><span>🔔</span> Alertas <span class="nb" id="bdg-alrt"></span></div>
+    <div class="ni" data-p="ia">🤖 Análise IA</div>
+    <div class="ni" data-p="alertas">🔔 Alertas <span class="nb" id="bdg-alrt"></span></div>
     <div class="ns">Sistema</div>
-    <div class="ni" data-p="config"><span>⚙️</span> Configurações</div>
+    <div class="ni" data-p="config">⚙️ Configurações</div>
   </nav>
-  <div class="sbf">Atualizado:<br><strong id="last-t">—</strong></div>
+  <div class="sbf">Última varredura:<br><strong id="last-t">—</strong></div>
 </div>
 
 <div id="main">
   <div class="tb">
     <h2 id="ptitle">Visão Geral</h2>
-    <span class="tsub" id="psub">Monitoramento dos concorrentes</span>
-    <div class="thbtn" id="thbtn" onclick="toggleTheme()">☀️ Claro</div>
-    <button class="btn bo" onclick="doRefresh()">🔄</button>
+    <span class="tsub" id="psub"></span>
+    <div class="thbtn" onclick="toggleTheme()">🌓 Tema</div>
+    <button class="btn bo" onclick="doRefresh()">🔄 Atualizar</button>
     <button class="btn bt" onclick="scanAll()" id="btn-scan-all">🔍 Varrer Todos</button>
     <button class="btn bp" onclick="openModal('m-comp')">+ Concorrente</button>
   </div>
+
   <div class="content">
 
     <!-- OVERVIEW -->
     <div class="page active" id="page-overview">
       <div id="top-alts"></div>
-      <div class="g4" style="margin-bottom:13px">
+      <div class="g4" style="margin-bottom:14px">
         <div class="stat"><div class="sl">Concorrentes</div><div class="sv" id="s1">0</div><div class="ss">monitorados</div></div>
         <div class="stat"><div class="sl">Varreduras Web</div><div class="sv" id="s-scan" style="color:var(--blue)">0</div><div class="ss" id="s-scan-s">realizadas</div></div>
-        <div class="stat"><div class="sl">Sites Alterados</div><div class="sv" id="s-chg" style="color:var(--orange)">0</div><div class="ss" id="s-chg-s">detectados</div></div>
+        <div class="stat"><div class="sl">Sites Alterados</div><div class="sv" id="s-chg" style="color:var(--orange)">0</div><div class="ss">detectados</div></div>
         <div class="stat"><div class="sl">Alertas Ativos</div><div class="sv" id="s4" style="color:var(--red)">0</div><div class="ss">sem leitura</div></div>
       </div>
       <div class="g2">
@@ -176,19 +208,19 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
           <div class="card">
             <div class="chd"><span class="ct">Status Radar Web</span><button class="btn bt bsm" onclick="scanAll()">🔍 Varrer Todos</button></div>
             <div id="scan-status-list"></div>
-            <div id="scan-status-empty" class="empty" style="display:none"><div class="ei">🔍</div><p>Cadastre concorrentes e clique em "Varrer Todos".</p></div>
+            <div id="scan-status-empty" class="empty" style="display:none;padding:20px"><div class="ei" style="font-size:22px">🔍</div><p style="margin-bottom:0">Cadastre concorrentes e clique em "Varrer Todos".</p></div>
           </div>
           <div class="card">
             <div class="chd"><span class="ct">Concorrentes</span><button class="btn bo bsm" onclick="openModal('m-comp')">+ Add</button></div>
             <div id="ov-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:9px"></div>
-            <div id="ov-empty" class="empty" style="display:none"><div class="ei">🏗️</div><p>Nenhum concorrente.</p><button class="btn bp" onclick="openModal('m-comp')">+ Adicionar</button></div>
+            <div id="ov-empty" class="empty" style="display:none"><div class="ei">🏗️</div><p>Nenhum concorrente cadastrado.</p><button class="btn bp" onclick="openModal('m-comp')">+ Adicionar</button></div>
           </div>
         </div>
         <div>
           <div class="card">
-            <div class="chd"><span class="ct">Linha do Tempo</span></div>
+            <div class="chd"><span class="ct">Linha do Tempo — Hoje</span></div>
             <div id="tl"></div>
-            <div id="tl-e" class="empty" style="display:none"><div class="ei">📋</div><p>Nenhuma atividade hoje.<br>Execute uma varredura ou registre dados.</p></div>
+            <div id="tl-e" class="empty" style="display:none;padding:20px"><div class="ei" style="font-size:22px">📋</div><p style="margin-bottom:0">Nenhuma atividade ainda.</p></div>
           </div>
         </div>
       </div>
@@ -197,29 +229,40 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
     <!-- CONCORRENTES -->
     <div class="page" id="page-concorrentes">
       <div class="card">
-        <div class="chd"><span class="ct">Concorrentes Monitorados</span>
-          <div style="display:flex;gap:8px"><button class="btn bt bsm" onclick="scanAll()">🔍 Varrer Todos</button><button class="btn bp" onclick="openModal('m-comp')">+ Adicionar</button></div>
+        <div class="chd">
+          <span class="ct">Concorrentes Monitorados</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn bt bsm" onclick="scanAll()">🔍 Varrer Todos</button>
+            <button class="btn bp bsm" onclick="openModal('m-comp')">+ Adicionar</button>
+          </div>
         </div>
-        <table><thead><tr><th>Empresa</th><th>Site</th><th>Instagram</th><th>Ads Library</th><th>Último Radar</th><th>Status</th><th>Ações</th></tr></thead>
-        <tbody id="comp-tb"></tbody></table>
+        <table>
+          <thead><tr><th>Empresa</th><th>Site</th><th>Cidades</th><th>Ads Library</th><th>Última Varredura</th><th>Status</th><th>Ações</th></tr></thead>
+          <tbody id="comp-tb"></tbody>
+        </table>
       </div>
     </div>
 
     <!-- RADAR WEB -->
     <div class="page" id="page-radar">
       <div class="infob">
-        <span style="font-size:18px;flex-shrink:0">🔍</span>
-        <div><strong>Radar Web Automático</strong> — usa <strong>Jina AI</strong> (gratuito, sem configuração) para ler qualquer site público e buscar notícias sobre os concorrentes. Detecta mudanças automaticamente. O <strong>Gemini analisa</strong> tudo e gera insights.</div>
+        <span style="font-size:20px;flex-shrink:0">🔍</span>
+        <div>
+          <strong>Radar Web Automático</strong> — lê o site do concorrente, busca movimentações na internet por <strong>cidade</strong>, detecta mudanças e analisa tudo com IA.<br>
+          <span style="color:var(--text3)">Usa Jina AI (gratuito, sem configuração) + Google Gemini para análise.</span>
+        </div>
       </div>
-      <div class="g4" style="margin-bottom:13px">
+      <div class="g4" style="margin-bottom:14px">
         <div class="stat"><div class="sl">Varreduras</div><div class="sv" id="r-total" style="color:var(--blue)">0</div></div>
         <div class="stat"><div class="sl">Sites Alterados</div><div class="sv" id="r-chg" style="color:var(--orange)">0</div></div>
         <div class="stat"><div class="sl">Estáveis</div><div class="sv" id="r-ok" style="color:var(--green)">0</div></div>
-        <div class="stat"><div class="sl">Última Varredura</div><div class="sv" id="r-last" style="font-size:13px;padding-top:6px">—</div></div>
+        <div class="stat"><div class="sl">Última Varredura</div><div class="sv" id="r-last" style="font-size:12px;padding-top:8px">—</div></div>
       </div>
-      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center">
+      <div style="display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap">
         <button class="btn bt" onclick="scanAll()">🔍 Varrer Todos Agora</button>
-        <select id="radar-filter" onchange="renderRadar()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 10px;font-size:12px"><option value="">Todos</option></select>
+        <select id="radar-filter" onchange="renderRadar()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:5px 10px;font-size:12px">
+          <option value="">Todos os concorrentes</option>
+        </select>
       </div>
       <div id="radar-list"></div>
       <div id="radar-empty" class="empty" style="display:none">
@@ -232,16 +275,17 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
     <!-- META ADS -->
     <div class="page" id="page-meta">
       <div class="infob"><span style="font-size:18px;flex-shrink:0">📣</span>
-        <div>Registre anúncios manualmente. Os links diretos para a Biblioteca de Anúncios de cada concorrente ficam abaixo.</div>
+        <div>Registre anúncios manualmente. O botão "Ads Library" de cada concorrente abre direto a biblioteca filtrada pelo nome da empresa.</div>
       </div>
-      <div class="g4" style="margin-bottom:13px">
+      <div class="g4" style="margin-bottom:14px">
         <div class="stat"><div class="sl">Total</div><div class="sv" id="m1" style="color:var(--blue)">0</div></div>
         <div class="stat"><div class="sl">Hoje</div><div class="sv" id="m2" style="color:var(--green)">0</div><div class="ss up">novos</div></div>
         <div class="stat"><div class="sl">Vídeo/Reels</div><div class="sv" id="m3" style="color:var(--purple)">0</div></div>
-        <div class="stat"><div class="sl">Mais Ativo</div><div class="sv" id="m4" style="font-size:13px;padding-top:7px">—</div></div>
+        <div class="stat"><div class="sl">Mais Ativo</div><div class="sv" id="m4" style="font-size:12px;padding-top:8px">—</div></div>
       </div>
       <div class="card">
-        <div class="chd"><span class="ct">Anúncios</span>
+        <div class="chd">
+          <span class="ct">Anúncios Registrados</span>
           <div style="display:flex;gap:7px;align-items:center">
             <select id="mf" onchange="renderMeta()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:12px"><option value="">Todos</option></select>
             <button class="btn bp bsm" onclick="openModal('m-ad')">+ Registrar</button>
@@ -251,61 +295,69 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
         <div id="ad-e" class="empty" style="display:none"><div class="ei">📣</div><p>Nenhum anúncio registrado.</p></div>
       </div>
       <div class="card"><div class="chd"><span class="ct">Volume por Concorrente</span></div><div id="m-bars"></div></div>
-      <div class="card"><div class="chd"><span class="ct">🔗 Links Rápidos — Biblioteca de Anúncios Meta</span></div><div id="m-links"></div></div>
+      <div class="card">
+        <div class="chd"><span class="ct">🔗 Abrir Biblioteca de Anúncios Meta</span></div>
+        <div id="m-links"></div>
+      </div>
     </div>
 
     <!-- SITES -->
     <div class="page" id="page-sites">
       <div class="infob"><span style="font-size:18px;flex-shrink:0">🌐</span>
-        <div>Registre mudanças manualmente. O <strong>Radar Web</strong> detecta mudanças automaticamente a cada varredura.</div>
+        <div>Mudanças detectadas automaticamente pelo <strong>Radar Web</strong>. Registre também manualmente o que você observou.</div>
       </div>
       <div class="card">
         <div class="chd"><span class="ct">Mudanças Detectadas</span><button class="btn bp bsm" onclick="openModal('m-site')">+ Registrar</button></div>
-        <table><thead><tr><th>Concorrente</th><th>Página</th><th>Tipo</th><th>Antes</th><th>Depois</th><th>Data</th><th></th></tr></thead>
-        <tbody id="site-tb"></tbody></table>
+        <table>
+          <thead><tr><th>Concorrente</th><th>Página</th><th>Tipo</th><th>Antes</th><th>Depois</th><th>Data</th><th></th></tr></thead>
+          <tbody id="site-tb"></tbody>
+        </table>
         <div id="site-e" class="empty" style="display:none"><div class="ei">🌐</div><p>Nenhuma mudança registrada.</p></div>
       </div>
-      <div class="card"><div class="chd"><span class="ct">🔗 Links dos Sites</span></div><div id="s-links"></div></div>
+      <div class="card"><div class="chd"><span class="ct">🔗 Links Diretos</span></div><div id="s-links"></div></div>
     </div>
 
     <!-- INSTAGRAM -->
     <div class="page" id="page-instagram">
       <div class="infob"><span style="font-size:18px;flex-shrink:0">📸</span>
-        <div>Registre posts relevantes manualmente.</div>
+        <div>Registre posts relevantes manualmente. Use os links rápidos abaixo para visitar cada perfil.</div>
       </div>
-      <div class="g4" style="margin-bottom:13px">
+      <div class="g4" style="margin-bottom:14px">
         <div class="stat"><div class="sl">Posts</div><div class="sv" id="ig1">0</div></div>
-        <div class="stat"><div class="sl">Maior Engajamento</div><div class="sv" id="ig2" style="font-size:13px;padding-top:7px">—</div></div>
-        <div class="stat"><div class="sl">Formato Top</div><div class="sv" id="ig3" style="font-size:13px;padding-top:7px">—</div></div>
+        <div class="stat"><div class="sl">Maior Engajamento</div><div class="sv" id="ig2" style="font-size:12px;padding-top:8px">—</div></div>
+        <div class="stat"><div class="sl">Formato Top</div><div class="sv" id="ig3" style="font-size:12px;padding-top:8px">—</div></div>
         <div class="stat"><div class="sl">Média Likes</div><div class="sv" id="ig4" style="color:var(--red)">0</div></div>
       </div>
       <div class="card">
         <div class="chd"><span class="ct">Posts</span><button class="btn bp bsm" onclick="openModal('m-ig')">+ Registrar</button></div>
-        <table><thead><tr><th>Concorrente</th><th>Tipo</th><th>Caption</th><th>Likes</th><th>Comentários</th><th>Data</th><th></th></tr></thead>
-        <tbody id="ig-tb"></tbody></table>
+        <table>
+          <thead><tr><th>Concorrente</th><th>Tipo</th><th>Caption</th><th>Likes</th><th>Comentários</th><th>Data</th><th></th></tr></thead>
+          <tbody id="ig-tb"></tbody>
+        </table>
         <div id="ig-e" class="empty" style="display:none"><div class="ei">📸</div><p>Nenhum post registrado.</p></div>
       </div>
-      <div class="card"><div class="chd"><span class="ct">🔗 Links Instagram</span></div><div id="ig-links"></div></div>
+      <div class="card"><div class="chd"><span class="ct">🔗 Perfis Instagram</span></div><div id="ig-links"></div></div>
     </div>
 
     <!-- IA -->
     <div class="page" id="page-ia">
       <div class="infob" id="gm-info"><span style="font-size:18px;flex-shrink:0">🤖</span>
-        <div id="gm-txt">Configure o <strong>Google Gemini</strong> (gratuito) em Configurações. <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">Obter chave grátis →</a></div>
+        <div id="gm-txt">Configure o <strong>Google Gemini</strong> gratuito em Configurações. <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">Obter chave grátis →</a></div>
       </div>
       <div style="display:flex;gap:9px;margin-bottom:15px;flex-wrap:wrap">
         <button class="btn bb" onclick="genAI('diario')">🤖 Resumo do Dia</button>
         <button class="btn bb" onclick="genAI('radar')">🔍 Analisar Varreduras</button>
+        <button class="btn bb" onclick="genAI('cidades')">📍 Por Cidade</button>
         <button class="btn bb" onclick="genAI('oportunidades')">💡 Oportunidades</button>
         <button class="btn bb" onclick="genAI('ameacas')">⚠️ Ameaças</button>
         <button class="btn bb" onclick="genAI('swot')">📋 SWOT</button>
       </div>
       <div class="tabs">
-        <div class="tab active" onclick="stab(this,'ti-hoje')">Atual</div>
+        <div class="tab active" onclick="stab(this,'ti-hoje')">Resultado Atual</div>
         <div class="tab" onclick="stab(this,'ti-hist')">Histórico</div>
       </div>
       <div id="ti-hoje">
-        <div id="ai-spin" class="spin-row" style="display:none"><div class="sp"></div>IA analisando...</div>
+        <div id="ai-spin" class="spin-row" style="display:none"><div class="sp"></div>IA analisando os dados...</div>
         <div id="ai-res"></div>
         <div id="ai-e" class="empty"><div class="ei">🤖</div><p>Clique em um botão para gerar análise com IA.<br><span style="font-size:12px;color:var(--text3)">Requer Google Gemini (gratuito)</span></p></div>
       </div>
@@ -318,18 +370,18 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
     <!-- ALERTAS -->
     <div class="page" id="page-alertas">
       <div class="card">
-        <div class="chd"><span class="ct">Alertas</span><button class="btn bo bsm" onclick="clrAlerts()">✓ Todos lidos</button></div>
+        <div class="chd"><span class="ct">Central de Alertas</span><button class="btn bo bsm" onclick="clrAlerts()">✓ Todos lidos</button></div>
         <div id="alrt-list"></div>
         <div id="alrt-e" class="empty" style="display:none"><div class="ei">🔔</div><p>Nenhum alerta.</p></div>
       </div>
       <div class="card">
-        <div class="chd"><span class="ct">+ Alerta Manual</span></div>
+        <div class="chd"><span class="ct">+ Criar Alerta Manual</span></div>
         <div class="fgrid">
           <div class="fg"><label>Tipo</label><select id="nat"><option value="alto">🔴 Alto</option><option value="medio">🟡 Médio</option><option value="info">🔵 Info</option></select></div>
           <div class="fg"><label>Concorrente</label><input id="nac" placeholder="Nome..."></div>
           <div class="fg ff"><label>Descrição *</label><input id="nad" placeholder="Ex: Lançou novo empreendimento..."></div>
         </div>
-        <button class="btn bp" style="margin-top:10px" onclick="addAlertManual()">+ Criar</button>
+        <button class="btn bp" style="margin-top:10px" onclick="addAlertManual()">+ Criar Alerta</button>
       </div>
     </div>
 
@@ -338,59 +390,84 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
       <div class="card">
         <div class="chd"><span class="ct">🤖 Google Gemini IA (Gratuito)</span></div>
         <div class="infob" style="margin-bottom:13px"><span>ℹ️</span>
-          <div><strong>100% gratuito.</strong> 15 análises/min, 1M tokens/dia. Chave em <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">aistudio.google.com</a> — 2 min, sem cartão.</div>
+          <div>100% gratuito. 15 req/min, 1M tokens/dia. Obtenha sua chave em <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">aistudio.google.com</a> — 2 minutos, sem cartão de crédito.</div>
         </div>
-        <div class="fg" style="margin-bottom:9px"><label>Chave Gemini</label><input type="password" id="cfg-gem" placeholder="AIzaSy..."></div>
+        <div class="fg" style="margin-bottom:9px"><label>Chave API Gemini</label><input type="password" id="cfg-gem" placeholder="AIzaSy..."></div>
         <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
           <button class="btn bp" onclick="saveGem()">💾 Salvar</button>
-          <button class="btn bo" onclick="testGem()">🧪 Testar</button>
+          <button class="btn bo" onclick="testGem()">🧪 Testar conexão</button>
           <span id="gem-res" style="font-size:12px;color:var(--text2)"></span>
         </div>
       </div>
       <div class="card">
-        <div class="chd"><span class="ct">🔍 Radar Web — Jina AI</span></div>
-        <div style="background:var(--gd);border:1px solid var(--green);border-radius:8px;padding:11px;margin-bottom:13px;font-size:13px;color:var(--green)">✅ <strong>100% gratuito. Sem configuração.</strong> Lê qualquer site público e faz buscas web automaticamente.</div>
-        <div class="srow"><div class="sinf"><div class="slbl">Análise IA automática após varredura</div><div class="sdsc">Enviar conteúdo ao Gemini automaticamente (requer chave)</div></div><div class="tog on" id="tog-ai-scan" onclick="this.classList.toggle('on')"></div></div>
-        <div class="srow"><div class="sinf"><div class="slbl">Buscar notícias na web</div><div class="sdsc">Pesquisar notícias sobre cada concorrente</div></div><div class="tog on" id="tog-news" onclick="this.classList.toggle('on')"></div></div>
-        <div class="srow"><div class="sinf"><div class="slbl">Alertas automáticos de mudança</div><div class="sdsc">Criar alerta quando site for alterado</div></div><div class="tog on" id="tog-chg-alert" onclick="this.classList.toggle('on')"></div></div>
+        <div class="chd"><span class="ct">🔍 Radar Web — Configurações</span></div>
+        <div style="background:var(--gd);border:1px solid var(--green);border-radius:8px;padding:11px;margin-bottom:13px;font-size:13px;color:var(--green)">✅ <strong>Jina AI — 100% gratuito, sem configuração.</strong> Lê sites e busca na web automaticamente.</div>
+        <div class="srow"><div class="sinf"><div class="slbl">Análise IA automática após varredura</div><div class="sdsc">Enviar conteúdo ao Gemini após cada scan (requer chave)</div></div><div class="tog on" id="tog-ai-scan" onclick="this.classList.toggle('on')"></div></div>
+        <div class="srow"><div class="sinf"><div class="slbl">Buscar notícias e movimentações por cidade</div><div class="sdsc">Pesquisar o nome do concorrente + cada cidade cadastrada</div></div><div class="tog on" id="tog-news" onclick="this.classList.toggle('on')"></div></div>
+        <div class="srow"><div class="sinf"><div class="slbl">Alertas automáticos de mudança de site</div><div class="sdsc">Criar alerta quando conteúdo do site for alterado</div></div><div class="tog on" id="tog-chg-alert" onclick="this.classList.toggle('on')"></div></div>
       </div>
       <div class="card">
         <div class="chd"><span class="ct">🎨 Aparência</span></div>
-        <div class="srow"><div class="sinf"><div class="slbl">Tema</div><div class="sdsc">Modo claro ou escuro</div></div><div class="thbtn" id="thbtn2" onclick="toggleTheme()">☀️ Claro</div></div>
+        <div class="srow"><div class="sinf"><div class="slbl">Tema escuro / claro</div></div><div class="thbtn" onclick="toggleTheme()">🌓 Alternar</div></div>
       </div>
       <div class="card">
-        <div class="chd"><span class="ct">⚙️ Dados</span></div>
-        <div class="srow"><div class="sinf"><div class="slbl">Exportar backup</div></div><button class="btn bo bsm" onclick="expData()">⬇️ Exportar</button></div>
+        <div class="chd"><span class="ct">⚙️ Backup de Dados</span></div>
+        <div class="srow"><div class="sinf"><div class="slbl">Exportar backup completo</div></div><button class="btn bo bsm" onclick="expData()">⬇️ Exportar JSON</button></div>
         <div class="srow"><div class="sinf"><div class="slbl">Importar backup</div></div><label class="btn bo bsm" style="cursor:pointer">⬆️ Importar<input type="file" accept=".json" onchange="impData(event)" style="display:none"></label></div>
-        <div class="srow"><div class="sinf"><div class="slbl" style="color:var(--red)">Limpar tudo</div></div><button class="btn bsm" style="background:var(--rd);color:var(--red);border:1px solid var(--red)" onclick="clrAll()">🗑️</button></div>
+        <div class="srow"><div class="sinf"><div class="slbl" style="color:var(--red)">Limpar todos os dados</div></div><button class="btn bsm" style="background:var(--rd);color:var(--red);border:1px solid var(--red)" onclick="clrAll()">🗑️ Limpar</button></div>
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /content -->
+</div><!-- /main -->
 
-<!-- MODAIS -->
+<!-- ===== MODAIS ===== -->
+
+<!-- CADASTRO CONCORRENTE -->
 <div class="mov" id="m-comp"><div class="modal">
   <h3>🏗️ Cadastrar Concorrente</h3>
-  <div class="infob" style="margin-bottom:14px"><span>🔍</span>
-    <div>Após cadastrar, o sistema irá <strong>varrer automaticamente</strong> o site e buscar notícias sobre este concorrente usando o Jina AI.</div>
+  <div class="infob" style="margin-bottom:14px"><span style="font-size:16px">🔍</span>
+    <div>Após cadastrar, o sistema irá <strong>varrer automaticamente</strong>: lê o site, busca movimentações na internet por cidade e analisa com IA.</div>
   </div>
   <div class="fgrid">
-    <div class="fg"><label>Nome *</label><input id="nc1" placeholder="Construtora Alpha"></div>
-    <div class="fg"><label>Site *</label><input id="nc2" placeholder="alpha.com.br"></div>
-    <div class="fg"><label>Instagram</label><input id="nc3" placeholder="@construtora.alpha"></div>
-    <div class="fg"><label>Facebook Page</label><input id="nc4" placeholder="construtoralpha"></div>
-    <div class="fg"><label>Prioridade</label><select id="nc5"><option value="alta">🔴 Alta</option><option value="media">🟡 Média</option><option value="baixa">🟢 Baixa</option></select></div>
-    <div class="fg"><label>Segmento</label><select id="nc6"><option>MCMV</option><option>Médio padrão</option><option>Alto padrão</option><option>Todos</option></select></div>
+    <div class="fg"><label>Nome da Empresa *</label><input id="nc1" placeholder="Construtora Alpha"></div>
+    <div class="fg"><label>Site *</label><input id="nc2" placeholder="alpha.com.br ou https://..."></div>
+    <div class="fg"><label>Prioridade</label>
+      <select id="nc5"><option value="alta">🔴 Alta</option><option value="media">🟡 Média</option><option value="baixa">🟢 Baixa</option></select>
+    </div>
+    <div class="fg"><label>Segmento</label>
+      <select id="nc6"><option>MCMV</option><option>Médio padrão</option><option>Alto padrão</option><option>Todos</option></select>
+    </div>
+    <div class="fg ff">
+      <label>Link Biblioteca de Anúncios Meta</label>
+      <input id="nc-ads" placeholder="https://www.facebook.com/ads/library/?...">
+      <div style="font-size:10px;color:var(--text3);margin-top:3px">Cole o link direto da busca na Biblioteca de Anúncios do concorrente</div>
+    </div>
+    <div class="fg ff">
+      <label>Instagram</label>
+      <input id="nc3" placeholder="@construtora.alpha ou https://instagram.com/...">
+    </div>
+    <div class="fg ff">
+      <label>📍 Cidades para Monitorar</label>
+      <div class="city-input-row">
+        <input id="nc-city-input" placeholder="Ex: Goiânia" onkeydown="if(event.key==='Enter'){event.preventDefault();addCity()}">
+        <button class="btn bo bsm" type="button" onclick="addCity()">+ Adicionar</button>
+      </div>
+      <div class="city-chips" id="city-chips"></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:3px">Adicione as cidades onde este concorrente atua e que você quer monitorar</div>
+    </div>
     <div class="fg ff"><label>Observações</label><input id="nc7" placeholder="Principal concorrente MCMV em Goiânia..."></div>
   </div>
-  <div id="scan-progress" style="display:none" class="spin-row"><div class="sp"></div><span id="scan-prog-txt">Varrendo site e buscando notícias...</span></div>
+  <div id="scan-progress" style="display:none;margin-top:12px">
+    <div class="steps" id="scan-steps"></div>
+  </div>
   <div class="mft">
     <button class="btn bo" onclick="closeModal('m-comp')" id="btn-cancel-comp">Cancelar</button>
     <button class="btn bp" onclick="addComp()" id="btn-add-comp">✅ Cadastrar e Varrer</button>
   </div>
 </div></div>
 
+<!-- REGISTRAR ANÚNCIO -->
 <div class="mov" id="m-ad"><div class="modal">
   <h3>📣 Registrar Anúncio Meta</h3>
   <div class="fgrid">
@@ -400,95 +477,161 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
     <div class="fg ff"><label>Texto do anúncio</label><textarea id="na4" placeholder="Corpo do anúncio..."></textarea></div>
     <div class="fg"><label>CTA</label><input id="na5" placeholder="Saiba Mais"></div>
     <div class="fg"><label>Oferta / Diferencial</label><input id="na6" placeholder="Taxa zero, MCMV..."></div>
-    <div class="fg ff"><label>URL (opcional)</label><input id="na7" placeholder="https://facebook.com/ads/library/..."></div>
+    <div class="fg ff"><label>URL do anúncio (opcional)</label><input id="na7" placeholder="https://facebook.com/ads/library/..."></div>
   </div>
   <div class="mft"><button class="btn bo" onclick="closeModal('m-ad')">Cancelar</button><button class="btn bp" onclick="addAd()">✅ Registrar</button></div>
 </div></div>
 
+<!-- REGISTRAR MUDANÇA SITE -->
 <div class="mov" id="m-site"><div class="modal">
   <h3>🌐 Registrar Mudança em Site</h3>
   <div class="fgrid">
     <div class="fg"><label>Concorrente *</label><select id="ns1"><option value="">Selecione...</option></select></div>
     <div class="fg"><label>Página</label><select id="ns2"><option>Homepage</option><option>Landing Page</option><option>Empreendimento</option><option>Sobre</option><option>Outra</option></select></div>
-    <div class="fg"><label>Tipo</label><select id="ns3"><option>Novo empreendimento</option><option>Mudança de CTA</option><option>Nova oferta</option><option>Nova landing page</option><option>Mudança de preço</option><option>Outro</option></select></div>
-    <div class="fg"><label>Antes</label><input id="ns4" placeholder="Como era..."></div>
-    <div class="fg ff"><label>Depois *</label><input id="ns5" placeholder="O que mudou..."></div>
+    <div class="fg"><label>Tipo de Mudança</label><select id="ns3"><option>Novo empreendimento</option><option>Mudança de CTA</option><option>Nova oferta</option><option>Nova landing page</option><option>Mudança de preço</option><option>Outro</option></select></div>
+    <div class="fg"><label>Como era antes</label><input id="ns4" placeholder="Como era..."></div>
+    <div class="fg ff"><label>O que mudou *</label><input id="ns5" placeholder="O que mudou..."></div>
     <div class="fg ff"><label>Observações</label><textarea id="ns6" placeholder="Contexto..."></textarea></div>
   </div>
   <div class="mft"><button class="btn bo" onclick="closeModal('m-site')">Cancelar</button><button class="btn bp" onclick="addSite()">✅ Registrar</button></div>
 </div></div>
 
+<!-- REGISTRAR POST IG -->
 <div class="mov" id="m-ig"><div class="modal">
   <h3>📸 Registrar Post Instagram</h3>
   <div class="fgrid">
     <div class="fg"><label>Concorrente *</label><select id="ni1"><option value="">Selecione...</option></select></div>
     <div class="fg"><label>Formato</label><select id="ni2"><option>Reels</option><option>Carrossel</option><option>Imagem</option><option>Story</option></select></div>
-    <div class="fg ff"><label>Caption</label><input id="ni3" placeholder="Texto do post..."></div>
+    <div class="fg ff"><label>Caption / Texto do post</label><input id="ni3" placeholder="Texto do post..."></div>
     <div class="fg"><label>Likes</label><input id="ni4" type="number" placeholder="0"></div>
     <div class="fg"><label>Comentários</label><input id="ni5" type="number" placeholder="0"></div>
-    <div class="fg ff"><label>Link (opcional)</label><input id="ni6" placeholder="https://instagram.com/p/..."></div>
+    <div class="fg ff"><label>Link do post (opcional)</label><input id="ni6" placeholder="https://instagram.com/p/..."></div>
   </div>
   <div class="mft"><button class="btn bo" onclick="closeModal('m-ig')">Cancelar</button><button class="btn bp" onclick="addIG()">✅ Registrar</button></div>
 </div></div>
 
-<div class="mov" id="m-scan-result"><div class="modal" style="width:700px">
+<!-- RESULTADO VARREDURA -->
+<div class="mov" id="m-scan-result"><div class="modal" style="width:720px">
   <h3 id="msr-title">🔍 Resultado da Varredura</h3>
   <div id="msr-body"></div>
   <div class="mft"><button class="btn bp" onclick="closeModal('m-scan-result')">Fechar</button></div>
 </div></div>
 
 <script>
+// ===== CONSTANTES =====
 const COLORS=['#58a6ff','#3fb950','#f0883e','#bc8cff','#e3b341','#f85149','#56d364','#ff7b72'];
 const AVD=['#0d2847','#1a3d22','#3d2100','#2d1f3a','#3d3000','#3d0f0b'];
 const AVL=['#ddf4ff','#dafbe1','#fff3e0','#f5f0ff','#fff8c5','#ffebe9'];
-const PT={overview:['Visão Geral','Monitoramento em tempo real'],concorrentes:['Concorrentes','Gerencie os monitorados'],radar:['Radar Web','Varredura automática via Jina AI'],meta:['Meta Ads','Anúncios detectados'],sites:['Sites','Mudanças nas páginas'],instagram:['Instagram','Posts e engajamento'],ia:['Análise IA','Insights por Inteligência Artificial'],alertas:['Alertas','Movimentos que requerem atenção'],config:['Configurações','Configurações do sistema']};
+const PT={
+  overview:['Visão Geral','Monitoramento em tempo real'],
+  concorrentes:['Concorrentes','Empresas monitoradas'],
+  radar:['Radar Web','Varredura automática com IA'],
+  meta:['Meta Ads','Anúncios dos concorrentes'],
+  sites:['Mudanças de Site','Alterações detectadas'],
+  instagram:['Instagram','Posts e engajamento'],
+  ia:['Análise IA','Insights por Inteligência Artificial'],
+  alertas:['Alertas','Movimentos que requerem atenção'],
+  config:['Configurações','Configurações do sistema']
+};
 
-let S={concorrentes:[],metaAds:[],siteChanges:[],instagram:[],aiResults:[],alertas:[],scans:[],geminiKey:'',theme:'dark'};
+// ===== ESTADO =====
+let S={
+  concorrentes:[],  // {id, nome, site, adsLibraryUrl, instagram, cidades:[], prioridade, segmento, obs}
+  metaAds:[],
+  siteChanges:[],
+  instagram:[],
+  aiResults:[],
+  alertas:[],
+  scans:[],         // resultados de varredura
+  geminiKey:'',
+  theme:'dark'
+};
+
+// ===== UTILS =====
 const today=()=>new Date().toLocaleDateString('pt-BR');
 const now=()=>new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-const ci=(n)=>S.concorrentes.findIndex(c=>c.nome===n);
 const clr=(i)=>COLORS[((i%COLORS.length)+COLORS.length)%COLORS.length];
 const avb=(i)=>S.theme==='dark'?AVD[i%AVD.length]:AVL[i%AVL.length];
 const trunc=(s,n)=>s&&s.length>n?s.substring(0,n)+'…':s||'';
+const ci=(nome)=>S.concorrentes.findIndex(c=>c.nome===nome);
+const fmt=(s)=>s?s.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/##\s?(.*)/g,'<strong>$1</strong>').replace(/\n/g,'<br>'):'';
 
-function save(){try{localStorage.setItem('ic_ecov3',JSON.stringify(S))}catch(e){}}
-function load(){try{const d=localStorage.getItem('ic_ecov3');if(d)S={...S,...JSON.parse(d)}}catch(e){}if(S.geminiKey)document.getElementById('cfg-gem').value=S.geminiKey;}
+// ===== PERSISTÊNCIA =====
+function save(){try{localStorage.setItem('ic_ecov4',JSON.stringify(S))}catch(e){console.warn('Save error',e)}}
+function load(){
+  try{const d=localStorage.getItem('ic_ecov4');if(d)S={...S,...JSON.parse(d)}}catch(e){}
+  // migrar dados sem cidades
+  S.concorrentes=S.concorrentes.map(c=>({...c,cidades:c.cidades||[]}));
+  if(S.geminiKey)document.getElementById('cfg-gem').value=S.geminiKey;
+}
 
+// ===== TEMA =====
 function applyTheme(t){
-  S.theme=t;document.documentElement.setAttribute('data-theme',t);
-  const l=t==='dark'?'☀️ Claro':'🌙 Escuro';
-  ['thbtn','thbtn2'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=l});
+  S.theme=t;
+  document.documentElement.setAttribute('data-theme',t);
 }
 function toggleTheme(){applyTheme(S.theme==='dark'?'light':'dark');save()}
 
+// ===== NAVEGAÇÃO =====
 document.querySelectorAll('.ni[data-p]').forEach(el=>el.addEventListener('click',()=>nav(el.dataset.p,el)));
 function nav(p,el){
   document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));
   document.getElementById('page-'+p).classList.add('active');
   (el||document.querySelector(`[data-p="${p}"]`)).classList.add('active');
-  const[t,s]=PT[p];document.getElementById('ptitle').textContent=t;document.getElementById('psub').textContent=s;
+  const[t,s]=PT[p]||[p,''];
+  document.getElementById('ptitle').textContent=t;
+  document.getElementById('psub').textContent=s;
   render(p);
 }
 function stab(el,id){
-  el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');
+  el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
   ['ti-hoje','ti-hist'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display=x===id?'block':'none'});
 }
 
+// ===== MODAIS =====
 function openModal(id){popSels();document.getElementById(id).classList.add('open')}
 function closeModal(id){document.getElementById(id).classList.remove('open')}
 document.querySelectorAll('.mov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
-function popSels(){['na1','ns1','ni1'].forEach(sid=>{const el=document.getElementById(sid);if(!el)return;const cur=el.value;el.innerHTML='<option value="">Selecione...</option>'+S.concorrentes.map(c=>`<option>${c.nome}</option>`).join('');if(cur)el.value=cur;})}
+function popSels(){
+  ['na1','ns1','ni1'].forEach(sid=>{
+    const el=document.getElementById(sid);if(!el)return;
+    const cur=el.value;
+    el.innerHTML='<option value="">Selecione...</option>'+S.concorrentes.map(c=>`<option>${c.nome}</option>`).join('');
+    if(cur)el.value=cur;
+  });
+}
+
+// ===== CIDADES (chips no modal) =====
+let tempCidades=[];
+function addCity(){
+  const inp=document.getElementById('nc-city-input');
+  const v=inp.value.trim();
+  if(!v||tempCidades.includes(v))return;
+  tempCidades.push(v);
+  inp.value='';
+  renderCityChips();
+}
+function removeCity(c){tempCidades=tempCidades.filter(x=>x!==c);renderCityChips()}
+function renderCityChips(){
+  document.getElementById('city-chips').innerHTML=tempCidades.map(c=>`<span class="city-chip">📍${c}<button onclick="removeCity('${c}')" title="Remover">×</button></span>`).join('');
+}
+function resetCityModal(){tempCidades=[];document.getElementById('city-chips').innerHTML='';document.getElementById('nc-city-input').value='';}
 
 // ===== JINA AI =====
 async function fetchSite(url){
   const u=url.startsWith('http')?url:'https://'+url;
-  const r=await fetch(`https://r.jina.ai/${u}`,{headers:{'Accept':'text/plain','X-Return-Format':'text','X-Timeout':'20'}});
+  const r=await fetch(`https://r.jina.ai/${u}`,{
+    headers:{'Accept':'text/plain','X-Return-Format':'text','X-Timeout':'20'}
+  });
   if(!r.ok)throw new Error(`Erro ${r.status}`);
   return await r.text();
 }
 async function searchWeb(q){
-  const r=await fetch(`https://s.jina.ai/${encodeURIComponent(q)}`,{headers:{'Accept':'text/plain','X-Return-Format':'text'}});
+  const r=await fetch(`https://s.jina.ai/${encodeURIComponent(q)}`,{
+    headers:{'Accept':'text/plain','X-Return-Format':'text'}
+  });
   if(!r.ok)throw new Error(`Erro ${r.status}`);
   return await r.text();
 }
@@ -497,102 +640,294 @@ function hash(str){
   let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h=h&h}return h.toString(36);
 }
 
-async function scanCompetitor(comp,showProg){
-  const res={compId:comp.id,compNome:comp.nome,compSite:comp.site,date:today(),time:now(),siteText:'',siteHash:'',siteChanged:false,siteError:'',newsText:'',newsError:'',analysis:'',analysisError:'',metaAdsUrl:''};
+// ===== SCAN STEPS UI =====
+function stepSet(id,state,label){
+  const stDiv=document.getElementById('scan-steps');if(!stDiv)return;
+  let el=document.getElementById('step-'+id);
+  if(!el){el=document.createElement('div');el.id='step-'+id;el.className='step';stDiv.appendChild(el)}
+  const icons={running:'<div class="sp" style="width:12px;height:12px;border-width:2px"></div>',done:'✅',error:'❌',wait:'⏳'};
+  el.className='step '+(state==='running'?'running':state==='done'?'done':state==='error'?'error':'');
+  el.innerHTML=`<span class="step-icon">${icons[state]||'•'}</span>${label}`;
+}
+
+// ===== VARREDURA PRINCIPAL =====
+async function scanCompetitor(comp, updateUI){
+  const res={
+    compId:comp.id, compNome:comp.nome, compSite:comp.site,
+    adsLibraryUrl: comp.adsLibraryUrl||`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=${encodeURIComponent(comp.nome)}`,
+    cidades: comp.cidades||[],
+    date:today(), time:now(),
+    siteText:'', siteHash:'', siteChanged:false, siteError:'',
+    searches:[], // [{query, result, error}]
+    analysis:'', analysisError:''
+  };
   const prev=S.scans.find(s=>s.compId===comp.id);
-  res.metaAdsUrl=`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=${encodeURIComponent(comp.facebook||comp.nome)}`;
-  // 1. Ler site
-  if(showProg)setP(`Lendo site de ${comp.nome}...`);
-  try{res.siteText=await fetchSite(comp.site);res.siteHash=hash(res.siteText);if(prev&&prev.siteHash&&prev.siteHash!==res.siteHash)res.siteChanged=true;}catch(e){res.siteError=e.message}
-  // 2. Buscar notícias
+
+  // PASSO 1: Ler site
+  if(updateUI)stepSet('site','running',`Lendo site: ${comp.site}`);
+  try{
+    res.siteText=await fetchSite(comp.site);
+    res.siteHash=hash(res.siteText);
+    if(prev&&prev.siteHash&&prev.siteHash!==res.siteHash)res.siteChanged=true;
+    if(updateUI)stepSet('site','done',`Site lido — ${res.siteChanged?'⚠️ CONTEÚDO ALTERADO':'sem mudanças'}`);
+  }catch(e){
+    res.siteError=e.message;
+    if(updateUI)stepSet('site','error',`Site: ${e.message}`);
+  }
+
+  // PASSO 2: Buscas web por cidade + geral
   const tn=document.getElementById('tog-news');
   if(!tn||tn.classList.contains('on')){
-    if(showProg)setP(`Buscando notícias sobre ${comp.nome}...`);
-    try{res.newsText=await searchWeb(`"${comp.nome}" construtora incorporadora imóveis lançamento`)}catch(e){res.newsError=e.message}
+    const queries=[];
+    // Busca geral
+    queries.push({label:`Busca geral: "${comp.nome}"`,q:`"${comp.nome}" construtora incorporadora lançamento imóveis novidade`});
+    // Busca por cada cidade
+    (comp.cidades||[]).forEach(cidade=>{
+      queries.push({label:`Cidade: ${cidade}`,q:`"${comp.nome}" ${cidade} imóveis lançamento construtora`});
+      queries.push({label:`Mercado: ${cidade}`,q:`mercado imobiliário ${cidade} lançamentos incorporadoras 2024 2025`});
+    });
+    for(const qObj of queries){
+      if(updateUI)stepSet('search-'+qObj.q.substring(0,10),'running',qObj.label);
+      try{
+        const txt=await searchWeb(qObj.q);
+        res.searches.push({query:qObj.q,label:qObj.label,result:txt,error:''});
+        if(updateUI)stepSet('search-'+qObj.q.substring(0,10),'done',`✓ ${qObj.label}`);
+      }catch(e){
+        res.searches.push({query:qObj.q,label:qObj.label,result:'',error:e.message});
+        if(updateUI)stepSet('search-'+qObj.q.substring(0,10),'error',`${qObj.label}: ${e.message}`);
+      }
+    }
   }
-  // 3. Análise IA
+
+  // PASSO 3: Análise IA
   const ta=document.getElementById('tog-ai-scan');
   if(S.geminiKey&&(!ta||ta.classList.contains('on'))){
-    if(showProg)setP(`IA analisando ${comp.nome}...`);
+    if(updateUI)stepSet('ai','running','🤖 IA analisando tudo...');
     try{
-      const p=`Você é analista de inteligência competitiva imobiliária. Analise as informações públicas sobre "${comp.nome}" (concorrente da Ecovita Construtora no Brasil).${res.siteChanged?'\n⚠️ ATENÇÃO: O site foi ALTERADO desde a última análise.':''}
+      const searchSummary=res.searches.filter(s=>s.result).map(s=>`\n--- ${s.label} ---\n${trunc(s.result,1000)}`).join('\n');
+      const cidades=comp.cidades&&comp.cidades.length?`Cidades monitoradas: ${comp.cidades.join(', ')}`:'Sem cidades específicas';
+      const prompt=`Você é analista de inteligência competitiva imobiliária da Ecovita Construtora. Analise as informações públicas sobre o concorrente "${comp.nome}".
 
-Responda de forma estruturada:
-**1. O que estão promovendo agora** — empreendimentos, ofertas, condições especiais
-**2. Posicionamento** — como se apresentam ao mercado
-**3. Mudanças detectadas** — ${res.siteChanged?'⚠️ houve mudança. O que pode ter mudado?':'site estável, sem alteração'}
-**4. Movimentos estratégicos** — o que sugerem sobre a estratégia deles
-**5. Oportunidade para a Ecovita** — o que explorar
+${res.siteChanged?'⚠️ ATENÇÃO: O SITE FOI ALTERADO desde a última análise.':''}
+${cidades}
 
-SITE (${comp.site}):\n${trunc(res.siteText,3000)||'Não disponível'}
-NOTÍCIAS:\n${trunc(res.newsText,2000)||'Não disponível'}`;
-      res.analysis=await callGemini(p);
-    }catch(e){res.analysisError=e.message}
+Responda estruturado assim:
+**1. O que estão promovendo agora**
+O que aparece no site e nas buscas sobre empreendimentos, ofertas, condições.
+
+**2. Movimentação por cidade**
+O que foi encontrado sobre este concorrente nas cidades monitoradas. Se não há dados, diga.
+
+**3. Mudanças detectadas**
+${res.siteChanged?'O site foi alterado. Com base no conteúdo, o que provavelmente mudou?':'Site estável, sem alteração de conteúdo.'}
+
+**4. Estratégia inferida**
+O que os dados sugerem sobre o posicionamento e estratégia deles.
+
+**5. Oportunidade para a Ecovita**
+1 ou 2 ações concretas que a Ecovita pode tomar com base nesses dados.
+
+CONTEÚDO DO SITE:
+${trunc(res.siteText,2500)||'Não disponível'}
+
+BUSCAS NA INTERNET:
+${trunc(searchSummary,3000)||'Sem resultados'}`;
+
+      res.analysis=await callGemini(prompt);
+      if(updateUI)stepSet('ai','done','✅ Análise IA concluída');
+    }catch(e){
+      res.analysisError=e.message;
+      if(updateUI)stepSet('ai','error',`IA: ${e.message}`);
+    }
   }
-  S.scans=S.scans.filter(s=>s.compId!==comp.id);S.scans.unshift(res);if(S.scans.length>50)S.scans=S.scans.slice(0,50);
-  const tc=document.getElementById('tog-chg-alert');
-  if(res.siteChanged&&(!tc||tc.classList.contains('on')))alert_add('medio','🌐',`${comp.nome} — Site alterado!`,`Mudança detectada às ${res.time}`);
-  if(!res.siteError&&!prev)alert_add('info','🔍',`${comp.nome} — Primeira varredura OK`,`Realizada às ${res.time}`);
-  save();return res;
-}
-function setP(t){const e=document.getElementById('scan-prog-txt');if(e)e.textContent=t}
 
+  // Salvar
+  S.scans=S.scans.filter(s=>s.compId!==comp.id);
+  S.scans.unshift(res);
+  if(S.scans.length>60)S.scans=S.scans.slice(0,60);
+
+  // Alertas
+  const tc=document.getElementById('tog-chg-alert');
+  if(res.siteChanged&&(!tc||tc.classList.contains('on'))){
+    alert_add('medio','🌐',`${comp.nome} — Site alterado!`,`Mudança detectada em ${res.date} às ${res.time}`);
+  }
+  if(!res.siteError&&!prev){
+    alert_add('info','🔍',`${comp.nome} — Primeira varredura concluída`,`${res.time} · ${(comp.cidades||[]).length} cidades monitoradas`);
+  }
+
+  save();
+  return res;
+}
+
+// ===== SCAN TODOS =====
 async function scanAll(){
   if(!S.concorrentes.length)return alert('Cadastre concorrentes primeiro.');
-  const btn=document.getElementById('btn-scan-all');btn.textContent='⏳ Varrendo...';btn.disabled=true;
-  for(const c of S.concorrentes){try{await scanCompetitor(c,false)}catch(e){}}
+  const btn=document.getElementById('btn-scan-all');
+  btn.textContent='⏳ Varrendo...';btn.disabled=true;
+  for(const c of S.concorrentes){
+    try{await scanCompetitor(c,false)}catch(e){console.warn(e)}
+    badges();
+  }
   btn.textContent='🔍 Varrer Todos';btn.disabled=false;
   document.getElementById('last-t').textContent=new Date().toLocaleString('pt-BR');
-  badges();renderRadar();rOverview();
+  renderRadar();rOverview();
 }
+
+// ===== SCAN UM =====
 async function scanOne(id){
   const c=S.concorrentes.find(x=>x.id===id);if(!c)return;
-  const btn=document.getElementById('scan-btn-'+id);if(btn){btn.textContent='⏳';btn.disabled=true}
-  try{const r=await scanCompetitor(c,false);badges();renderRadar();rOverview();rComps();if(btn){btn.textContent='🔍';btn.disabled=false}showScanResult(r);}
-  catch(e){if(btn){btn.textContent='❌';btn.disabled=false}}
+  const btn=document.getElementById('scan-btn-'+id);
+  if(btn){btn.textContent='⏳';btn.disabled=true}
+  try{
+    const r=await scanCompetitor(c,false);
+    badges();renderRadar();rOverview();rComps();
+    if(btn){btn.textContent='🔍';btn.disabled=false}
+    showScanResult(r);
+  }catch(e){
+    if(btn){btn.textContent='❌';btn.disabled=false}
+  }
 }
+
+// ===== MODAL RESULTADO =====
 function showScanResult(res){
   if(!res)return;
   document.getElementById('msr-title').textContent=`🔍 ${res.compNome} — Varredura Web`;
-  const chg=res.siteChanged?'<span class="scan-pill sp-chg">🌐 Site Alterado!</span>':'<span class="scan-pill sp-ok">✅ Sem Mudanças</span>';
-  const aiH=res.analysis?`<div class="aib" style="margin-top:13px"><div class="aihd"><span>🤖</span><span class="ait">Análise IA</span><span class="aid">${res.time}</span></div><div class="aix">${res.analysis.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}</div></div>`:(res.analysisError?`<p style="color:var(--text2);font-size:12px;margin-top:10px">IA indisponível: ${res.analysisError}</p>`:`<p style="color:var(--text2);font-size:12px;margin-top:10px">Configure o Gemini para análise automática.</p>`);
-  const news=res.newsText?`<details style="margin-top:10px"><summary style="cursor:pointer;font-size:12px;color:var(--text2)">📰 Resultado da busca web (expandir)</summary><div style="font-size:12px;color:var(--text2);line-height:1.7;max-height:180px;overflow-y:auto;margin-top:6px;padding-top:6px;border-top:1px solid var(--border)">${trunc(res.newsText,2000).replace(/\n/g,'<br>')}</div></details>`:'';
-  const site=res.siteText?`<details style="margin-top:8px"><summary style="cursor:pointer;font-size:12px;color:var(--text2)">📄 Conteúdo bruto do site (expandir)</summary><pre style="font-size:11px;color:var(--text2);margin-top:6px;white-space:pre-wrap;max-height:200px;overflow-y:auto">${trunc(res.siteText,2000)}</pre></details>`:'';
+
+  const cidadesH=res.cidades&&res.cidades.length?res.cidades.map(c=>`<span class="city-tag">📍${c}</span>`).join(''):'';
+  const sitePill=res.siteError?`<span class="scan-pill sp-err">❌ Site: ${res.siteError}</span>`:(res.siteChanged?'<span class="scan-pill sp-chg">🌐 Site Alterado!</span>':'<span class="scan-pill sp-ok">✅ Site Estável</span>');
+  const srchCount=res.searches?res.searches.filter(s=>s.result).length:0;
+  const srchPill=srchCount?`<span class="scan-pill sp-ok">🔎 ${srchCount} busca${srchCount>1?'s':''} realizadas</span>`:'<span class="scan-pill sp-pend">🔎 Sem buscas</span>';
+
+  const aiH=res.analysis?`
+    <div class="aib" style="margin-top:14px">
+      <div class="aihd"><span>🤖</span><span class="ait">Análise IA — ${res.compNome}</span><span class="aid">${res.date} ${res.time}</span></div>
+      <div class="aix">${fmt(res.analysis)}</div>
+    </div>`
+  :(res.analysisError?`<p style="color:var(--text2);font-size:12px;margin-top:10px">IA indisponível: ${res.analysisError}</p>`
+  :`<p style="color:var(--text2);font-size:12px;margin-top:10px">Configure o Gemini em Configurações para análise automática.</p>`);
+
+  const searchesH=res.searches&&res.searches.filter(s=>s.result).length?
+    res.searches.filter(s=>s.result).map(s=>`
+      <div class="res-section">
+        <div class="res-sec-hd" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+          🔎 ${s.label} <span style="margin-left:auto;font-weight:400;opacity:.6">▾ expandir</span>
+        </div>
+        <div class="res-sec-body" style="display:none">${trunc(s.result,1500).replace(/\n/g,'<br>')}</div>
+      </div>`).join(''):'';
+
+  const siteH=res.siteText?`
+    <div class="res-section">
+      <div class="res-sec-hd" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+        📄 Conteúdo bruto do site <span style="margin-left:auto;font-weight:400;opacity:.6">▾ expandir</span>
+      </div>
+      <pre class="res-sec-body" style="display:none;white-space:pre-wrap;font-family:inherit">${trunc(res.siteText,2000)}</pre>
+    </div>`:'';
+
   document.getElementById('msr-body').innerHTML=`
-    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      ${chg}${res.siteError?`<span class="scan-pill sp-err">❌ ${res.siteError}</span>`:''}
-      <span class="scan-pill sp-ok" style="background:var(--bg3);border-color:var(--border);color:var(--text2)">🕐 ${res.date} ${res.time}</span>
-      <a href="${res.metaAdsUrl}" target="_blank" class="tag tbl" style="text-decoration:none;font-size:10px">📣 Ads Library</a>
-      <a href="https://${res.compSite}" target="_blank" class="tag tgr" style="text-decoration:none;font-size:10px">🌐 Site</a>
+    <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+      ${sitePill}${srchPill}
+      <span class="scan-pill sp-pend">🕐 ${res.date} ${res.time}</span>
+      <a href="${res.adsLibraryUrl||'#'}" target="_blank" class="tag tbl" style="text-decoration:none">📣 Ads Library</a>
+      <a href="https://${res.compSite}" target="_blank" class="tag tgr" style="text-decoration:none">🌐 Site</a>
     </div>
-    ${aiH}${news}${site}`;
+    ${cidadesH?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">${cidadesH}</div>`:''}
+    ${aiH}
+    ${searchesH}
+    ${siteH}`;
+
   openModal('m-scan-result');
 }
 
-// ===== ADD =====
+// ===== ADD CONCORRENTE =====
 async function addComp(){
-  const n=document.getElementById('nc1').value.trim(),s=document.getElementById('nc2').value.trim();
+  const n=document.getElementById('nc1').value.trim();
+  const s=document.getElementById('nc2').value.trim();
   if(!n||!s)return alert('Nome e Site são obrigatórios.');
-  const comp={id:Date.now(),nome:n,site:s.replace(/^https?:\/\//,'').replace(/\/$/,''),instagram:document.getElementById('nc3').value.trim(),facebook:document.getElementById('nc4').value.trim(),prioridade:document.getElementById('nc5').value,segmento:document.getElementById('nc6').value,obs:document.getElementById('nc7').value.trim(),ativo:true};
+
+  const comp={
+    id:Date.now(),
+    nome:n,
+    site:s.replace(/^https?:\/\//,'').replace(/\/$/,''),
+    adsLibraryUrl:document.getElementById('nc-ads').value.trim(),
+    instagram:document.getElementById('nc3').value.trim(),
+    cidades:[...tempCidades],
+    prioridade:document.getElementById('nc5').value,
+    segmento:document.getElementById('nc6').value,
+    obs:document.getElementById('nc7').value.trim(),
+    ativo:true
+  };
+
   S.concorrentes.push(comp);save();
-  document.getElementById('scan-progress').style.display='flex';
-  document.getElementById('btn-add-comp').disabled=true;document.getElementById('btn-cancel-comp').disabled=true;document.getElementById('btn-add-comp').textContent='⏳ Varrendo...';
-  let res=null;try{res=await scanCompetitor(comp,true)}catch(e){}
-  document.getElementById('scan-progress').style.display='none';
-  ['nc1','nc2','nc3','nc4','nc7'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('btn-add-comp').disabled=false;document.getElementById('btn-cancel-comp').disabled=false;document.getElementById('btn-add-comp').textContent='✅ Cadastrar e Varrer';
-  closeModal('m-comp');badges();render('overview');
-  if(res)setTimeout(()=>showScanResult(res),300);
+
+  // Mostrar progresso
+  const prog=document.getElementById('scan-progress');
+  const steps=document.getElementById('scan-steps');
+  prog.style.display='block';steps.innerHTML='';
+  document.getElementById('btn-add-comp').disabled=true;
+  document.getElementById('btn-cancel-comp').disabled=true;
+  document.getElementById('btn-add-comp').textContent='⏳ Varrendo...';
+
+  let res=null;
+  try{res=await scanCompetitor(comp,true)}catch(e){console.warn(e)}
+
+  // Reset form
+  ['nc1','nc2','nc-ads','nc3','nc7'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('nc5').selectedIndex=0;
+  document.getElementById('nc6').selectedIndex=0;
+  prog.style.display='none';steps.innerHTML='';
+  resetCityModal();
+  document.getElementById('btn-add-comp').disabled=false;
+  document.getElementById('btn-cancel-comp').disabled=false;
+  document.getElementById('btn-add-comp').textContent='✅ Cadastrar e Varrer';
+
+  closeModal('m-comp');
+  badges();render('overview');
+
+  if(res)setTimeout(()=>showScanResult(res),350);
 }
-function addAd(){const c=document.getElementById('na1').value,t=document.getElementById('na3').value.trim();if(!c||!t)return alert('Concorrente e Título obrigatórios.');S.metaAds.push({id:Date.now(),data:today(),concorrente:c,titulo:t,texto:document.getElementById('na4').value.trim(),tipo:document.getElementById('na2').value,cta:document.getElementById('na5').value.trim(),oferta:document.getElementById('na6').value.trim(),url:document.getElementById('na7').value.trim()});['na3','na4','na5','na6','na7'].forEach(id=>document.getElementById(id).value='');alert_add('medio','📣',`${c} — Novo anúncio`,t);save();closeModal('m-ad');renderMeta();badges();}
-function addSite(){const c=document.getElementById('ns1').value,d=document.getElementById('ns5').value.trim();if(!c||!d)return alert('Campos obrigatórios.');S.siteChanges.push({id:Date.now(),data:today(),concorrente:c,pagina:document.getElementById('ns2').value,tipo_mudanca:document.getElementById('ns3').value,antes:document.getElementById('ns4').value.trim(),depois:d,obs:document.getElementById('ns6').value.trim()});['ns4','ns5','ns6'].forEach(id=>document.getElementById(id).value='');alert_add('medio','🌐',`${c} — Mudança`,d);save();closeModal('m-site');rSites();badges();}
-function addIG(){const c=document.getElementById('ni1').value;if(!c)return alert('Selecione o concorrente.');S.instagram.push({id:Date.now(),data:today(),concorrente:c,tipo_post:document.getElementById('ni2').value,caption:document.getElementById('ni3').value.trim(),likes:parseInt(document.getElementById('ni4').value)||0,comentarios:parseInt(document.getElementById('ni5').value)||0,url:document.getElementById('ni6').value.trim()});['ni3','ni4','ni5','ni6'].forEach(id=>document.getElementById(id).value='');save();closeModal('m-ig');rIG();}
-function addAlertManual(){const d=document.getElementById('nad').value.trim();if(!d)return;const c=document.getElementById('nac').value.trim(),tp=document.getElementById('nat').value;alert_add(tp,tp==='alto'?'🚨':tp==='medio'?'⚠️':'ℹ️',c?`${c} — ${d}`:d,'');document.getElementById('nad').value='';document.getElementById('nac').value='';}
-function alert_add(tipo,icone,titulo,detalhe){S.alertas.unshift({id:Date.now(),tipo,icone,titulo,detalhe,data:today(),time:now(),lido:false});if(S.alertas.length>60)S.alertas=S.alertas.slice(0,60);save();badges();}
+
+// ===== ADD OUTROS =====
+function addAd(){
+  const c=document.getElementById('na1').value,t=document.getElementById('na3').value.trim();
+  if(!c||!t)return alert('Concorrente e Título são obrigatórios.');
+  S.metaAds.push({id:Date.now(),data:today(),concorrente:c,titulo:t,texto:document.getElementById('na4').value.trim(),tipo:document.getElementById('na2').value,cta:document.getElementById('na5').value.trim(),oferta:document.getElementById('na6').value.trim(),url:document.getElementById('na7').value.trim()});
+  ['na3','na4','na5','na6','na7'].forEach(id=>document.getElementById(id).value='');
+  alert_add('medio','📣',`${c} — Novo anúncio registrado`,t);
+  save();closeModal('m-ad');renderMeta();badges();
+}
+function addSite(){
+  const c=document.getElementById('ns1').value,d=document.getElementById('ns5').value.trim();
+  if(!c||!d)return alert('Campos obrigatórios.');
+  S.siteChanges.push({id:Date.now(),data:today(),concorrente:c,pagina:document.getElementById('ns2').value,tipo_mudanca:document.getElementById('ns3').value,antes:document.getElementById('ns4').value.trim(),depois:d,obs:document.getElementById('ns6').value.trim()});
+  ['ns4','ns5','ns6'].forEach(id=>document.getElementById(id).value='');
+  alert_add('medio','🌐',`${c} — Mudança de site`,d);
+  save();closeModal('m-site');rSites();badges();
+}
+function addIG(){
+  const c=document.getElementById('ni1').value;
+  if(!c)return alert('Selecione o concorrente.');
+  S.instagram.push({id:Date.now(),data:today(),concorrente:c,tipo_post:document.getElementById('ni2').value,caption:document.getElementById('ni3').value.trim(),likes:parseInt(document.getElementById('ni4').value)||0,comentarios:parseInt(document.getElementById('ni5').value)||0,url:document.getElementById('ni6').value.trim()});
+  ['ni3','ni4','ni5','ni6'].forEach(id=>document.getElementById(id).value='');
+  save();closeModal('m-ig');rIG();
+}
+function addAlertManual(){
+  const d=document.getElementById('nad').value.trim();if(!d)return;
+  const c=document.getElementById('nac').value.trim(),tp=document.getElementById('nat').value;
+  alert_add(tp,tp==='alto'?'🚨':tp==='medio'?'⚠️':'ℹ️',c?`${c} — ${d}`:d,'');
+  document.getElementById('nad').value='';document.getElementById('nac').value='';
+}
+
+// ===== ALERTAS =====
+function alert_add(tipo,icone,titulo,detalhe){
+  S.alertas.unshift({id:Date.now(),tipo,icone,titulo,detalhe,data:today(),time:now(),lido:false});
+  if(S.alertas.length>80)S.alertas=S.alertas.slice(0,80);
+  save();badges();
+}
 function markRead(id){const a=S.alertas.find(x=>x.id===id);if(a){a.lido=true;save();rAlertas();badges()}}
 function clrAlerts(){S.alertas.forEach(a=>a.lido=true);save();rAlertas();badges()}
 function rm(arr,id){S[arr]=S[arr].filter(x=>x.id!==id);save()}
 
+// ===== BADGES =====
 function badges(){
   const chg=S.scans.filter(s=>s.siteChanged).length;
   const un=S.alertas.filter(a=>!a.lido).length;
@@ -607,38 +942,103 @@ function badges(){
   document.getElementById('s-chg').textContent=chg;
   document.getElementById('s4').textContent=un;
   document.getElementById('s-scan-s').textContent=S.scans.length?`${S.scans.length} de ${S.concorrentes.length}`:'nenhuma ainda';
-  document.getElementById('s-chg-s').textContent=chg?`${chg} site${chg>1?'s':''} alterado${chg>1?'s':''}`:'nenhuma alteração';
-  const gok=!!S.geminiKey;
-  document.getElementById('gm-txt').innerHTML=gok?'✅ <strong>Gemini configurado.</strong> IA ativa para análise e varreduras.':'Configure o <strong>Google Gemini</strong> (gratuito) em Configurações. <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">Obter grátis →</a>';
 }
 
-function render(p){const fn={overview:rOverview,concorrentes:rComps,radar:renderRadar,meta:renderMeta,sites:rSites,instagram:rIG,ia:rIA,alertas:rAlertas};if(fn[p])fn[p]()}
+// ===== RENDERS =====
+function render(p){
+  const fn={overview:rOverview,concorrentes:rComps,radar:renderRadar,meta:renderMeta,sites:rSites,instagram:rIG,ia:rIA,alertas:rAlertas};
+  if(fn[p])fn[p]();
+}
 function doRefresh(){document.getElementById('last-t').textContent=new Date().toLocaleString('pt-BR');const a=document.querySelector('.ni.active');if(a)render(a.dataset.p)}
 
+// --- OVERVIEW ---
 function rOverview(){
   badges();
-  // Scan status
+  // Status scan
   const ssl=document.getElementById('scan-status-list'),sse=document.getElementById('scan-status-empty');
   if(!S.concorrentes.length){ssl.innerHTML='';sse.style.display='block'}
-  else{sse.style.display='none';ssl.innerHTML=S.concorrentes.map((c,i)=>{const sc=S.scans.find(s=>s.compId===c.id);const pill=sc?(sc.siteChanged?'<span class="scan-pill sp-chg">🌐 Alterado</span>':'<span class="scan-pill sp-ok">✅ Estável</span>'):'<span class="scan-pill sp-pend">⏳ Pendente</span>';return`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)"><div class="av" style="background:${avb(i)};color:${clr(i)};width:24px;height:24px;font-size:10px">${c.nome[0]}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${c.nome}</div><div style="font-size:11px;color:var(--text2)">${sc?`${sc.date} ${sc.time}`:'Nunca varrido'}</div></div>${pill}<button id="scan-btn-${c.id}" class="btn bt bsm" onclick="scanOne(${c.id})">🔍</button></div>`;}).join('')}
+  else{
+    sse.style.display='none';
+    ssl.innerHTML=S.concorrentes.map((c,i)=>{
+      const sc=S.scans.find(s=>s.compId===c.id);
+      const pill=sc?(sc.siteChanged?'<span class="scan-pill sp-chg">🌐 Alterado</span>':'<span class="scan-pill sp-ok">✅ Estável</span>'):'<span class="scan-pill sp-pend">⏳ Pendente</span>';
+      const cids=(c.cidades||[]).map(x=>`<span class="city-tag" style="font-size:9px;padding:1px 5px">📍${x}</span>`).join('');
+      return`<div style="display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border)">
+        <div class="av" style="background:${avb(i)};color:${clr(i)};width:26px;height:26px;font-size:10px">${c.nome[0]}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:500">${c.nome}</div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px">${cids}</div>
+          <div style="font-size:10px;color:var(--text2);margin-top:2px">${sc?`${sc.date} ${sc.time}`:'Nunca varrido'}</div>
+        </div>
+        ${pill}
+        <button id="scan-btn-${c.id}" class="btn bt bsm" onclick="scanOne(${c.id})" style="font-size:10px;padding:3px 8px">🔍</button>
+      </div>`;
+    }).join('')
+  }
+
   // Comp cards
   const grd=document.getElementById('ov-grid'),emp=document.getElementById('ov-empty');
   if(!S.concorrentes.length){grd.style.display='none';emp.style.display='block'}
-  else{grd.style.display='grid';emp.style.display='none';grd.innerHTML=S.concorrentes.map((c,i)=>{const sc=S.scans.find(s=>s.compId===c.id);const ads=S.metaAds.filter(x=>x.concorrente===c.nome&&x.data===today()).length;const score=Math.min(100,S.metaAds.filter(x=>x.concorrente===c.nome).length*15+S.siteChanges.filter(x=>x.concorrente===c.nome).length*20+(sc?20:0));return`<div class="cc"><div class="cct"><div class="av" style="background:${avb(i)};color:${clr(i)}">${c.nome[0]}</div><div><div class="ccn">${c.nome}</div><div class="ccs">${c.site}</div></div></div><div style="display:flex;align-items:center;gap:5px;margin-bottom:7px"><div class="ccsb"><div class="ccsf" style="width:${score}%;background:${clr(i)}"></div></div><span style="font-size:10px;color:${clr(i)};font-weight:600">${score}</span></div><div style="display:flex;flex-wrap:wrap;gap:4px">${sc?`<span class="tag ${sc.siteChanged?'tor':'tgr'}">${sc.siteChanged?'🌐 Alterado':'✅ Estável'}</span>`:''} ${ads?`<span class="tag tbl">📣${ads}</span>`:''}</div></div>`;}).join('')}
-  // Alertas críticos
-  document.getElementById('top-alts').innerHTML=S.alertas.filter(a=>!a.lido&&a.tipo==='alto').slice(0,2).map(a=>`<div class="ab" style="background:var(--rd);border:1px solid var(--red);margin-bottom:9px"><span class="ai2">${a.icone}</span><div class="abody"><strong>${a.titulo}</strong>${a.detalhe}</div></div>`).join('');
+  else{
+    grd.style.display='grid';emp.style.display='none';
+    grd.innerHTML=S.concorrentes.map((c,i)=>{
+      const sc=S.scans.find(s=>s.compId===c.id);
+      const score=Math.min(100,S.metaAds.filter(x=>x.concorrente===c.nome).length*15+S.siteChanges.filter(x=>x.concorrente===c.nome).length*20+(sc?20:0));
+      const cids=(c.cidades||[]).slice(0,3).map(x=>`<span class="city-tag" style="font-size:9px;padding:1px 5px">📍${x}</span>`).join('');
+      return`<div class="cc">
+        <div class="cct"><div class="av" style="background:${avb(i)};color:${clr(i)}">${c.nome[0]}</div>
+        <div><div class="ccn">${c.nome}</div><div class="ccs">${c.segmento||''}</div></div></div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px">${cids}</div>
+        <div style="display:flex;align-items:center;gap:5px;margin-bottom:7px"><div class="ccsb"><div class="ccsf" style="width:${score}%;background:${clr(i)}"></div></div><span style="font-size:10px;color:${clr(i)};font-weight:600">${score}</span></div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px">${sc?(sc.siteChanged?'<span class="tag tor">🌐 Alterado</span>':'<span class="tag tgr">✅ Estável</span>'):''}</div>
+      </div>`;
+    }).join('')
+  }
+
   // Timeline
   const tl=document.getElementById('tl'),tle=document.getElementById('tl-e');
-  const evs=[...S.scans.filter(s=>s.date===today()).map(s=>({c:s.siteChanged?'var(--orange)':'var(--teal)',e:`${s.compNome} — Varredura web`,d:s.siteChanged?'🌐 Mudança detectada!':'✅ Sem alterações'})),...S.metaAds.filter(x=>x.data===today()).map(x=>({c:'var(--blue)',e:`${x.concorrente} — Novo anúncio`,d:x.titulo})),...S.siteChanges.filter(x=>x.data===today()).map(x=>({c:'var(--orange)',e:`${x.concorrente} — ${x.tipo_mudanca}`,d:x.depois})),...S.instagram.filter(x=>x.data===today()).map(x=>({c:'var(--purple)',e:`${x.concorrente} — ${x.tipo_post}`,d:`❤️${x.likes} 💬${x.comentarios}`}))];
-  if(!evs.length){tl.innerHTML='';tle.style.display='block'}else{tle.style.display='none';tl.innerHTML=evs.map(x=>`<div class="tli"><div class="tldot" style="background:${x.c}"></div><div><div class="tlev">${x.e}</div><div class="tldet">${x.d}</div></div></div>`).join('')}
+  const evs=[
+    ...S.scans.filter(s=>s.date===today()).map(s=>({c:s.siteChanged?'var(--orange)':'var(--teal)',e:`${s.compNome} — Varredura web`,d:s.siteChanged?'🌐 Site alterado detectado':'✅ Sem mudanças'})),
+    ...S.metaAds.filter(x=>x.data===today()).map(x=>({c:'var(--blue)',e:`${x.concorrente} — Anúncio`,d:x.titulo})),
+    ...S.siteChanges.filter(x=>x.data===today()).map(x=>({c:'var(--orange)',e:`${x.concorrente} — ${x.tipo_mudanca}`,d:x.depois})),
+    ...S.instagram.filter(x=>x.data===today()).map(x=>({c:'var(--purple)',e:`${x.concorrente} — ${x.tipo_post}`,d:`❤️${x.likes} 💬${x.comentarios}`}))
+  ];
+  if(!evs.length){tl.innerHTML='';tle.style.display='block'}
+  else{tle.style.display='none';tl.innerHTML=evs.map(x=>`<div class="tli"><div class="tldot" style="background:${x.c}"></div><div><div class="tlev">${x.e}</div><div class="tldet">${x.d}</div></div></div>`).join('')}
+
+  // Alertas críticos topo
+  document.getElementById('top-alts').innerHTML=S.alertas.filter(a=>!a.lido&&a.tipo==='alto').slice(0,2).map(a=>`<div class="ab" style="background:var(--rd);border:1px solid var(--red);margin-bottom:9px"><span class="ai2">${a.icone}</span><div class="abody"><strong>${a.titulo}</strong>${a.detalhe}</div></div>`).join('');
 }
 
+// --- CONCORRENTES ---
 function rComps(){
   const tb=document.getElementById('comp-tb');
-  if(!S.concorrentes.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:26px">Nenhum. <a href="#" onclick="openModal(\'m-comp\')" style="color:var(--blue)">Adicionar →</a></td></tr>';return}
-  tb.innerHTML=S.concorrentes.map((c,i)=>{const sc=S.scans.find(s=>s.compId===c.id);const pill=sc?(sc.siteChanged?'<span class="scan-pill sp-chg">🌐 Alterado</span>':'<span class="scan-pill sp-ok">✅ Estável</span>'):'<span class="scan-pill sp-pend">⏳ Pendente</span>';const lib=`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=${encodeURIComponent(c.facebook||c.nome)}`;return`<tr><td><div class="tdf"><div class="av" style="background:${avb(i)};color:${clr(i)}">${c.nome[0]}</div><div><div style="font-weight:600">${c.nome}</div><div style="font-size:11px;color:var(--text2)">${c.segmento||''}</div></div></div></td><td><a href="https://${c.site}" target="_blank" style="color:var(--blue);font-size:12px">${c.site}</a></td><td style="font-size:12px">${c.instagram||'—'}</td><td><a href="${lib}" target="_blank" class="tag tbl" style="text-decoration:none">🔗 Ver Ads</a></td><td style="font-size:11px;color:var(--text2)">${sc?`${sc.date} ${sc.time}`:'—'}</td><td>${pill}</td><td><div style="display:flex;gap:5px"><button id="scan-btn-${c.id}" class="btn bt bsm" onclick="scanOne(${c.id})" title="Varrer agora">🔍</button>${sc?`<button class="btn bo bsm" onclick="showScanResult(S.scans.find(s=>s.compId===${c.id}))" title="Ver resultado">👁</button>`:''}<button class="btn bo bsm" onclick="if(confirm('Remover?')){rm('concorrentes',${c.id});rComps();badges()}" title="Remover">✕</button></div></td></tr>`;}).join('');
+  if(!S.concorrentes.length){
+    tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--text2);padding:26px">Nenhum concorrente. <a href="#" onclick="openModal(\'m-comp\')" style="color:var(--blue)">Adicionar →</a></td></tr>';return
+  }
+  tb.innerHTML=S.concorrentes.map((c,i)=>{
+    const sc=S.scans.find(s=>s.compId===c.id);
+    const pill=sc?(sc.siteChanged?'<span class="scan-pill sp-chg">🌐 Alterado</span>':'<span class="scan-pill sp-ok">✅ Estável</span>'):'<span class="scan-pill sp-pend">⏳ Pendente</span>';
+    const cids=(c.cidades||[]).map(x=>`<span class="city-tag" style="font-size:9px">📍${x}</span>`).join(' ');
+    const libUrl=c.adsLibraryUrl||`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=${encodeURIComponent(c.nome)}`;
+    return`<tr>
+      <td><div class="tdf"><div class="av" style="background:${avb(i)};color:${clr(i)}">${c.nome[0]}</div>
+        <div><div style="font-weight:600">${c.nome}</div><div style="font-size:11px;color:var(--text2)">${c.segmento||''}</div></div></div></td>
+      <td><a href="https://${c.site}" target="_blank" style="color:var(--blue);font-size:12px">${c.site}</a></td>
+      <td><div style="display:flex;gap:3px;flex-wrap:wrap">${cids||'<span style="color:var(--text3);font-size:11px">—</span>'}</div></td>
+      <td><a href="${libUrl}" target="_blank" class="tag tbl" style="text-decoration:none">📣 Ver Ads</a></td>
+      <td style="font-size:11px;color:var(--text2)">${sc?`${sc.date} ${sc.time}`:'—'}</td>
+      <td>${pill}</td>
+      <td><div style="display:flex;gap:4px">
+        <button id="scan-btn-${c.id}" class="btn bt bsm" onclick="scanOne(${c.id})" title="Varrer agora">🔍</button>
+        ${sc?`<button class="btn bo bsm" onclick="showScanResult(S.scans.find(s=>s.compId===${c.id}))" title="Ver resultado">👁</button>`:''}
+        <button class="btn bo bsm" onclick="if(confirm('Remover ${c.nome}?')){rm('concorrentes',${c.id});S.scans=S.scans.filter(s=>s.compId!==${c.id});save();rComps();badges()}" title="Remover">✕</button>
+      </div></td>
+    </tr>`;
+  }).join('');
 }
 
+// --- RADAR WEB ---
 function renderRadar(){
   const fv=document.getElementById('radar-filter').value;
   const scans=fv?S.scans.filter(s=>s.compNome===fv):S.scans;
@@ -646,89 +1046,204 @@ function renderRadar(){
   document.getElementById('r-chg').textContent=S.scans.filter(s=>s.siteChanged).length;
   document.getElementById('r-ok').textContent=S.scans.filter(s=>!s.siteChanged&&!s.siteError).length;
   document.getElementById('r-last').textContent=S.scans[0]?`${S.scans[0].date} ${S.scans[0].time}`:'—';
+
   const sel=document.getElementById('radar-filter'),cur=sel.value;
-  sel.innerHTML='<option value="">Todos</option>'+S.concorrentes.map(c=>`<option>${c.nome}</option>`).join('');if(cur)sel.value=cur;
+  sel.innerHTML='<option value="">Todos os concorrentes</option>'+S.concorrentes.map(c=>`<option>${c.nome}</option>`).join('');
+  if(cur)sel.value=cur;
+
   const list=document.getElementById('radar-list'),emp=document.getElementById('radar-empty');
   if(!scans.length){list.innerHTML='';emp.style.display='block';return}
   emp.style.display='none';
+
   list.innerHTML=scans.map(sc=>{
     const idx=S.concorrentes.findIndex(c=>c.id===sc.compId);
-    const color=idx>=0?clr(idx):'var(--text2)';const bg=idx>=0?avb(idx):'var(--bg3)';
-    const cls=sc.siteChanged?'changed':sc.siteError?'':'fresh';
-    const sst=sc.siteError?`<span class="scan-pill sp-err">❌ ${sc.siteError}</span>`:(sc.siteChanged?'<span class="scan-pill sp-chg">🌐 Site Alterado!</span>':'<span class="scan-pill sp-ok">✅ Sem mudanças</span>');
-    const nst=sc.newsError?`<span class="scan-pill sp-err">❌ Busca falhou</span>`:(sc.newsText?'<span class="scan-pill sp-ok">📰 Notícias coletadas</span>':'<span class="scan-pill sp-pend">📰 Sem notícias</span>');
-    const aiH=sc.analysis?`<div class="aib" style="margin-top:12px"><div class="aihd"><span>🤖</span><span class="ait">Análise IA — ${sc.compNome}</span><span class="aid">${sc.time}</span></div><div class="aix">${sc.analysis.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}</div></div>`:'';
-    const newsH=sc.newsText?`<details><summary style="cursor:pointer;font-size:12px;color:var(--text2);margin:8px 0 4px">📰 Ver resultado da busca web</summary><div style="font-size:12px;color:var(--text2);line-height:1.7;max-height:180px;overflow-y:auto;border-top:1px solid var(--border);padding-top:6px">${trunc(sc.newsText,1500).replace(/\n/g,'<br>')}</div></details>`:'';
-    return`<div class="scanbox ${cls}"><div class="scan-hd"><div class="av" style="background:${bg};color:${color};width:32px;height:32px;font-size:13px">${sc.compNome[0]}</div><span class="scan-name">${sc.compNome}</span><span class="scan-date">${sc.date} ${sc.time}</span><button class="btn bt bsm" onclick="scanOne(${sc.compId})">🔍 Redigitalizar</button></div><div class="scan-meta">${sst}${nst}<a href="https://${sc.compSite}" target="_blank" class="tag tbl" style="text-decoration:none;font-size:10px">🌐 Site</a><a href="${sc.metaAdsUrl}" target="_blank" class="tag tpr" style="text-decoration:none;font-size:10px">📣 Ads Library</a></div>${newsH}${aiH}</div>`;
+    const color=idx>=0?clr(idx):'var(--text2)';
+    const bg=idx>=0?avb(idx):'var(--bg3)';
+    const cls=sc.siteChanged?'changed':(!sc.siteError?'fresh':'');
+    const sitePill=sc.siteError?`<span class="scan-pill sp-err">❌ ${sc.siteError}</span>`:(sc.siteChanged?'<span class="scan-pill sp-chg">🌐 Site Alterado!</span>':'<span class="scan-pill sp-ok">✅ Sem mudanças</span>');
+    const srchN=(sc.searches||[]).filter(s=>s.result).length;
+    const srchPill=srchN?`<span class="scan-pill sp-ok">🔎 ${srchN} buscas</span>`:'<span class="scan-pill sp-pend">🔎 Sem buscas</span>';
+    const cidsH=(sc.cidades||[]).map(c=>`<span class="city-tag">📍${c}</span>`).join('');
+    const libUrl=sc.adsLibraryUrl||`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=${encodeURIComponent(sc.compNome)}`;
+
+    const aiH=sc.analysis?`<div class="aib" style="margin-top:12px"><div class="aihd"><span>🤖</span><span class="ait">Análise IA</span><span class="aid">${sc.time}</span></div><div class="aix">${fmt(sc.analysis)}</div></div>`:
+      (sc.analysisError?`<div style="color:var(--text2);font-size:12px;margin-top:8px;padding:8px;background:var(--bg2);border-radius:6px">⚠️ IA: ${sc.analysisError}</div>`:'');
+
+    const searchesH=(sc.searches||[]).filter(s=>s.result).map(s=>`
+      <div class="res-section">
+        <div class="res-sec-hd" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">
+          🔎 ${s.label} <span style="margin-left:auto;font-weight:400;opacity:.6">▾</span>
+        </div>
+        <div class="res-sec-body" style="display:none">${trunc(s.result,1200).replace(/\n/g,'<br>')}</div>
+      </div>`).join('');
+
+    return`<div class="scanbox ${cls}">
+      <div class="scan-hd">
+        <div class="av" style="background:${bg};color:${color};width:34px;height:34px;font-size:14px">${sc.compNome[0]}</div>
+        <span class="scan-name">${sc.compNome}</span>
+        <span class="scan-date">${sc.date} ${sc.time}</span>
+        <button class="btn bt bsm" onclick="scanOne(${sc.compId})" style="font-size:11px">🔍 Re-varrer</button>
+      </div>
+      ${cidsH?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">${cidsH}</div>`:''}
+      <div class="scan-meta">
+        ${sitePill}${srchPill}
+        <a href="https://${sc.compSite}" target="_blank" class="tag tgr" style="text-decoration:none">🌐 Site</a>
+        <a href="${libUrl}" target="_blank" class="tag tbl" style="text-decoration:none">📣 Ads Library</a>
+      </div>
+      ${aiH}
+      ${searchesH}
+    </div>`;
   }).join('');
 }
 
+// --- META ADS ---
 function renderMeta(){
-  const fv=document.getElementById('mf').value;const ads=fv?S.metaAds.filter(a=>a.concorrente===fv):S.metaAds;
-  document.getElementById('m1').textContent=S.metaAds.length;document.getElementById('m2').textContent=S.metaAds.filter(a=>a.data===today()).length;document.getElementById('m3').textContent=S.metaAds.filter(a=>['Vídeo','Reels'].includes(a.tipo)).length;
+  const fv=document.getElementById('mf').value;
+  const ads=fv?S.metaAds.filter(a=>a.concorrente===fv):S.metaAds;
+  document.getElementById('m1').textContent=S.metaAds.length;
+  document.getElementById('m2').textContent=S.metaAds.filter(a=>a.data===today()).length;
+  document.getElementById('m3').textContent=S.metaAds.filter(a=>['Vídeo','Reels'].includes(a.tipo)).length;
   const byc=S.concorrentes.map(c=>({n:c.nome,ct:S.metaAds.filter(a=>a.concorrente===c.nome).length})).sort((a,b)=>b.ct-a.ct);
   document.getElementById('m4').textContent=byc[0]?.n?.split(' ')[0]||'—';
-  const sel=document.getElementById('mf'),cur=sel.value;sel.innerHTML='<option value="">Todos</option>'+S.concorrentes.map(c=>`<option>${c.nome}</option>`).join('');if(cur)sel.value=cur;
+  const sel=document.getElementById('mf'),cur=sel.value;
+  sel.innerHTML='<option value="">Todos</option>'+S.concorrentes.map(c=>`<option>${c.nome}</option>`).join('');
+  if(cur)sel.value=cur;
   const grd=document.getElementById('adgrid'),emp=document.getElementById('ad-e');
-  if(!ads.length){grd.innerHTML='';emp.style.display='block'}else{emp.style.display='none';grd.innerHTML=ads.map(a=>{const ix=ci(a.concorrente);return`<div class="adc"><div class="adtop"><div class="tdf" style="gap:5px"><div class="av" style="background:${avb(ix<0?0:ix)};color:${clr(ix<0?0:ix)};width:20px;height:20px;font-size:9px">${a.concorrente[0]}</div><span style="font-size:11px;color:var(--text2)">${a.concorrente}</span></div><span class="tag tgy">${a.tipo}</span></div><div class="adtitle">${a.titulo}</div><div class="adtxt">${a.texto||'—'}</div><div class="adf">${a.cta?`<span class="tag tbl">${a.cta}</span>`:''} ${a.oferta?`<span class="tag tgr">${a.oferta}</span>`:''}<span style="font-size:10px;color:var(--text3);margin-left:auto">${a.data}</span>${a.url?`<a href="${a.url}" target="_blank" style="color:var(--blue);font-size:10px">🔗</a>`:''}</div><button onclick="rm('metaAds',${a.id});renderMeta()" style="margin-top:7px;background:none;border:none;cursor:pointer;font-size:10px;color:var(--text3)">🗑️</button></div>`;}).join('')}
-  const mx=Math.max(...byc.map(b=>b.ct),1);document.getElementById('m-bars').innerHTML=byc.length?byc.map((b,i)=>`<div class="pr"><div class="pl"><span>${b.n}</span><span style="color:${clr(i)};font-weight:600">${b.ct}</span></div><div class="pb"><div class="pf" style="width:${(b.ct/mx)*100}%;background:${clr(i)}"></div></div></div>`).join(''):'<div style="color:var(--text2);font-size:13px">Cadastre concorrentes.</div>';
-  document.getElementById('m-links').innerHTML=S.concorrentes.length?`<div style="display:flex;flex-wrap:wrap;gap:7px">`+S.concorrentes.map((c,i)=>{const u=`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=${encodeURIComponent(c.facebook||c.nome)}`;return`<a href="${u}" target="_blank" class="btn bo bsm" style="color:${clr(i)};border-color:${clr(i)}">📣 ${c.nome}</a>`;}).join('')+'</div>':'<div style="color:var(--text2);font-size:13px">Cadastre concorrentes.</div>';
+  if(!ads.length){grd.innerHTML='';emp.style.display='block'}
+  else{
+    emp.style.display='none';
+    grd.innerHTML=ads.map(a=>{const ix=ci(a.concorrente);return`<div class="adc"><div class="adtop"><div class="tdf" style="gap:5px"><div class="av" style="background:${avb(ix<0?0:ix)};color:${clr(ix<0?0:ix)};width:20px;height:20px;font-size:9px">${a.concorrente[0]}</div><span style="font-size:11px;color:var(--text2)">${a.concorrente}</span></div><span class="tag tgy">${a.tipo}</span></div><div class="adtitle">${a.titulo}</div><div class="adtxt">${a.texto||'—'}</div><div class="adf">${a.cta?`<span class="tag tbl">${a.cta}</span>`:''} ${a.oferta?`<span class="tag tgr">${a.oferta}</span>`:''}<span style="font-size:10px;color:var(--text3);margin-left:auto">${a.data}</span>${a.url?`<a href="${a.url}" target="_blank" style="color:var(--blue);font-size:10px">🔗</a>`:''}</div><button onclick="rm('metaAds',${a.id});renderMeta()" style="margin-top:7px;background:none;border:none;cursor:pointer;font-size:10px;color:var(--text3)">🗑️ remover</button></div>`;}).join('')
+  }
+  const mx=Math.max(...byc.map(b=>b.ct),1);
+  document.getElementById('m-bars').innerHTML=byc.length?byc.map((b,i)=>`<div class="pr"><div class="pl"><span>${b.n}</span><span style="color:${clr(i)};font-weight:600">${b.ct}</span></div><div class="pb"><div class="pf" style="width:${(b.ct/mx)*100}%;background:${clr(i)}"></div></div></div>`).join(''):'<div style="color:var(--text2);font-size:13px">Cadastre concorrentes.</div>';
+  document.getElementById('m-links').innerHTML=S.concorrentes.length?
+    `<div style="display:flex;flex-wrap:wrap;gap:7px">`+S.concorrentes.map((c,i)=>{
+      const u=c.adsLibraryUrl||`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=${encodeURIComponent(c.nome)}`;
+      return`<a href="${u}" target="_blank" class="btn bo bsm" style="color:${clr(i)};border-color:${clr(i)}">📣 ${c.nome}</a>`;
+    }).join('')+'</div>':'<div style="color:var(--text2);font-size:13px">Cadastre concorrentes.</div>';
 }
 
+// --- SITES ---
 function rSites(){
   const tb=document.getElementById('site-tb'),emp=document.getElementById('site-e');
-  if(!S.siteChanges.length){tb.innerHTML='';emp.style.display='block'}else{emp.style.display='none';tb.innerHTML=S.siteChanges.map(s=>{const i=ci(s.concorrente);return`<tr><td><div class="tdf"><div class="av" style="background:${avb(i<0?0:i)};color:${clr(i<0?0:i)}">${s.concorrente[0]}</div>${s.concorrente}</div></td><td style="font-size:12px">${s.pagina}</td><td><span class="tag tor">${s.tipo_mudanca}</span></td><td style="font-size:12px;color:var(--text2)">${s.antes||'—'}</td><td style="font-size:12px;color:var(--green)">${s.depois}</td><td style="font-size:12px;color:var(--text2)">${s.data}</td><td><button onclick="rm('siteChanges',${s.id});rSites()" style="background:none;border:none;cursor:pointer;color:var(--text3)">🗑️</button></td></tr>`;}).join('')}
+  if(!S.siteChanges.length){tb.innerHTML='';emp.style.display='block'}
+  else{
+    emp.style.display='none';
+    tb.innerHTML=S.siteChanges.map(s=>{const i=ci(s.concorrente);return`<tr><td><div class="tdf"><div class="av" style="background:${avb(i<0?0:i)};color:${clr(i<0?0:i)}">${s.concorrente[0]}</div>${s.concorrente}</div></td><td style="font-size:12px">${s.pagina}</td><td><span class="tag tor">${s.tipo_mudanca}</span></td><td style="font-size:12px;color:var(--text2)">${s.antes||'—'}</td><td style="font-size:12px;color:var(--green)">${s.depois}</td><td style="font-size:12px;color:var(--text2)">${s.data}</td><td><button onclick="rm('siteChanges',${s.id});rSites()" style="background:none;border:none;cursor:pointer;color:var(--text3)">🗑️</button></td></tr>`;}).join('')
+  }
   document.getElementById('s-links').innerHTML=S.concorrentes.length?`<div style="display:flex;flex-wrap:wrap;gap:7px">`+S.concorrentes.map((c,i)=>`<a href="https://${c.site}" target="_blank" class="btn bo bsm" style="color:${clr(i)};border-color:${clr(i)}">🌐 ${c.nome}</a>`).join('')+'</div>':'';
 }
 
+// --- INSTAGRAM ---
 function rIG(){
   const ps=S.instagram;
-  document.getElementById('ig1').textContent=ps.length;const te=[...ps].sort((a,b)=>(b.likes+b.comentarios)-(a.likes+a.comentarios))[0];document.getElementById('ig2').textContent=te?te.concorrente.split(' ')[0]:'—';const fm={};ps.forEach(p=>fm[p.tipo_post]=(fm[p.tipo_post]||0)+1);const tf=Object.entries(fm).sort((a,b)=>b[1]-a[1])[0];document.getElementById('ig3').textContent=tf?tf[0]:'—';document.getElementById('ig4').textContent=ps.length?Math.round(ps.reduce((s,p)=>s+p.likes,0)/ps.length).toLocaleString('pt-BR'):'0';
+  document.getElementById('ig1').textContent=ps.length;
+  const te=[...ps].sort((a,b)=>(b.likes+b.comentarios)-(a.likes+a.comentarios))[0];
+  document.getElementById('ig2').textContent=te?te.concorrente.split(' ')[0]:'—';
+  const fm={};ps.forEach(p=>fm[p.tipo_post]=(fm[p.tipo_post]||0)+1);
+  const tf=Object.entries(fm).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('ig3').textContent=tf?tf[0]:'—';
+  document.getElementById('ig4').textContent=ps.length?Math.round(ps.reduce((s,p)=>s+p.likes,0)/ps.length).toLocaleString('pt-BR'):'0';
   const tb=document.getElementById('ig-tb'),emp=document.getElementById('ig-e');
-  if(!ps.length){tb.innerHTML='';emp.style.display='block'}else{emp.style.display='none';tb.innerHTML=ps.map(p=>{const i=ci(p.concorrente);return`<tr><td><div class="tdf"><div class="av" style="background:${avb(i<0?0:i)};color:${clr(i<0?0:i)}">${p.concorrente[0]}</div>${p.concorrente}</div></td><td><span class="tag tpr">${p.tipo_post}</span></td><td style="font-size:12px">${p.caption||'—'}</td><td style="font-weight:600;color:var(--red)">❤️${p.likes.toLocaleString('pt-BR')}</td><td>💬${p.comentarios}</td><td style="font-size:12px;color:var(--text2)">${p.data}</td><td><button onclick="rm('instagram',${p.id});rIG()" style="background:none;border:none;cursor:pointer;color:var(--text3)">🗑️</button></td></tr>`;}).join('')}
-  document.getElementById('ig-links').innerHTML=S.concorrentes.length?`<div style="display:flex;flex-wrap:wrap;gap:7px">`+S.concorrentes.map((c,i)=>{const h=c.instagram?c.instagram.replace('@',''):'';const u=h?`https://instagram.com/${h}`:`https://instagram.com/explore/search/?q=${encodeURIComponent(c.nome)}`;return`<a href="${u}" target="_blank" class="btn bo bsm" style="color:${clr(i)};border-color:${clr(i)}">📸 ${c.nome}</a>`;}).join('')+'</div>':'';
+  if(!ps.length){tb.innerHTML='';emp.style.display='block'}
+  else{
+    emp.style.display='none';
+    tb.innerHTML=ps.map(p=>{const i=ci(p.concorrente);return`<tr><td><div class="tdf"><div class="av" style="background:${avb(i<0?0:i)};color:${clr(i<0?0:i)}">${p.concorrente[0]}</div>${p.concorrente}</div></td><td><span class="tag tpr">${p.tipo_post}</span></td><td style="font-size:12px">${p.caption||'—'}</td><td style="font-weight:600;color:var(--red)">❤️${p.likes.toLocaleString('pt-BR')}</td><td>💬${p.comentarios}</td><td style="font-size:12px;color:var(--text2)">${p.data}</td><td><button onclick="rm('instagram',${p.id});rIG()" style="background:none;border:none;cursor:pointer;color:var(--text3)">🗑️</button></td></tr>`;}).join('')
+  }
+  document.getElementById('ig-links').innerHTML=S.concorrentes.length?`<div style="display:flex;flex-wrap:wrap;gap:7px">`+S.concorrentes.map((c,i)=>{const h=c.instagram?c.instagram.replace('@','').replace('https://instagram.com/',''):'';const u=h?`https://instagram.com/${h}`:`https://www.instagram.com/explore/search/keyword/?q=${encodeURIComponent(c.nome)}`;return`<a href="${u}" target="_blank" class="btn bo bsm" style="color:${clr(i)};border-color:${clr(i)}">📸 ${c.nome}</a>`;}).join('')+'</div>':'';
 }
 
-function rIA(){const h=document.getElementById('ai-hist'),e=document.getElementById('ai-histe');if(!S.aiResults.length){h.innerHTML='';e.style.display='block'}else{e.style.display='none';h.innerHTML=S.aiResults.slice(0,10).map(r=>`<div class="aib" style="margin-bottom:11px"><div class="aihd"><span>🤖</span><span class="ait">${r.tipo}</span><span class="aid">${r.data}</span></div><div class="aix">${r.texto}</div></div>`).join('')}}
+// --- IA ---
+function rIA(){
+  const h=document.getElementById('ai-hist'),e=document.getElementById('ai-histe');
+  if(!S.aiResults.length){h.innerHTML='';e.style.display='block'}
+  else{e.style.display='none';h.innerHTML=S.aiResults.slice(0,10).map(r=>`<div class="aib" style="margin-bottom:11px"><div class="aihd"><span>🤖</span><span class="ait">${r.tipo}</span><span class="aid">${r.data}</span></div><div class="aix">${r.texto}</div></div>`).join('')}
+}
 
+// --- ALERTAS ---
 function rAlertas(){
   const el=document.getElementById('alrt-list'),emp=document.getElementById('alrt-e');
-  if(!S.alertas.length){el.innerHTML='';emp.style.display='block';return}emp.style.display='none';
+  if(!S.alertas.length){el.innerHTML='';emp.style.display='block';return}
+  emp.style.display='none';
   const CLS={alto:['var(--rd)','var(--red)'],medio:['var(--od)','var(--orange)'],info:['var(--bd)','var(--blue)']};
-  el.innerHTML=S.alertas.map(a=>{const[bg,bd]=CLS[a.tipo]||CLS.info;return`<div class="ab" style="background:${bg};border:1px solid ${bd};${a.lido?'opacity:.4':''}"><span class="ai2">${a.icone}</span><div class="abody" style="flex:1"><strong>${a.titulo}</strong>${a.detalhe?`<br><span style="color:var(--text2)">${a.detalhe}</span>`:''}<div style="font-size:10px;color:var(--text3);margin-top:2px">${a.data} ${a.time||''}</div></div>${!a.lido?`<button class="btn bo bsm" onclick="markRead(${a.id})">✓</button>`:''}</div>`;}).join('');
+  el.innerHTML=S.alertas.map(a=>{const[bg,bd]=CLS[a.tipo]||CLS.info;return`<div class="ab" style="background:${bg};border:1px solid ${bd};${a.lido?'opacity:.4':''}"><span class="ai2">${a.icone}</span><div class="abody" style="flex:1"><strong>${a.titulo}</strong>${a.detalhe?`<br><span style="color:var(--text2);font-size:12px">${a.detalhe}</span>`:''}<div style="font-size:10px;color:var(--text3);margin-top:2px">${a.data} ${a.time||''}</div></div>${!a.lido?`<button class="btn bo bsm" onclick="markRead(${a.id})">✓ Lido</button>`:''}</div>`;}).join('');
 }
 
 // ===== GEMINI =====
 function saveGem(){S.geminiKey=document.getElementById('cfg-gem').value.trim();save();badges();document.getElementById('gem-res').textContent='✅ Salvo!';setTimeout(()=>document.getElementById('gem-res').textContent='',2500)}
-async function testGem(){const k=document.getElementById('cfg-gem').value.trim()||S.geminiKey;if(!k)return alert('Cole a chave primeiro.');document.getElementById('gem-res').textContent='⏳ Testando...';try{const r=await callGemini('Responda apenas: "OK"',k);document.getElementById('gem-res').textContent='✅ '+r.substring(0,20)}catch(e){document.getElementById('gem-res').textContent='❌ '+e.message}}
-async function callGemini(prompt,key){const k=key||S.geminiKey;if(!k)throw new Error('Chave não configurada');const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'Erro API')}const d=await r.json();return d.candidates?.[0]?.content?.parts?.[0]?.text||'Sem resposta'}
+async function testGem(){
+  const k=document.getElementById('cfg-gem').value.trim()||S.geminiKey;
+  if(!k)return alert('Cole a chave primeiro.');
+  document.getElementById('gem-res').textContent='⏳ Testando...';
+  try{const r=await callGemini('Responda apenas: OK',k);document.getElementById('gem-res').textContent='✅ '+r.substring(0,30)}
+  catch(e){document.getElementById('gem-res').textContent='❌ '+e.message}
+}
+async function callGemini(prompt,key){
+  const k=key||S.geminiKey;
+  if(!k)throw new Error('Chave não configurada');
+  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${k}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+  if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'Erro API')}
+  const d=await r.json();
+  return d.candidates?.[0]?.content?.parts?.[0]?.text||'Sem resposta';
+}
 
 function buildData(){
-  const sc=S.scans.slice(0,6).map(s=>`[Varredura ${s.date}] ${s.compNome}: ${s.siteChanged?'SITE ALTERADO':'estável'}. IA: ${trunc(s.analysis,400)||'—'}`).join('\n');
-  return[sc,...S.metaAds.slice(-12).map(a=>`[Meta Ad] ${a.concorrente}: "${a.titulo}" | ${a.tipo} | ${a.oferta||'—'}`),...S.siteChanges.slice(-8).map(s=>`[Site] ${s.concorrente}: ${s.tipo_mudanca} → "${s.depois}"`),...S.instagram.slice(-8).map(p=>`[IG] ${p.concorrente}: ${p.tipo_post} | "${p.caption}" | ❤️${p.likes}`)].filter(Boolean).join('\n');
+  const scanSum=S.scans.slice(0,8).map(s=>{
+    const cids=s.cidades&&s.cidades.length?` [cidades: ${s.cidades.join(', ')}]`:'';
+    const srchSum=(s.searches||[]).filter(x=>x.result).map(x=>`  → ${x.label}: ${trunc(x.result,300)}`).join('\n');
+    return`[Varredura ${s.date}] ${s.compNome}${cids}: ${s.siteChanged?'⚠️ SITE ALTERADO':'estável'}.\nBuscas:\n${srchSum}\nIA: ${trunc(s.analysis,400)||'—'}`;
+  }).join('\n\n');
+  return[
+    scanSum,
+    ...S.metaAds.slice(-10).map(a=>`[Meta Ad] ${a.concorrente}: "${a.titulo}" | ${a.tipo} | ${a.oferta||'—'}`),
+    ...S.siteChanges.slice(-6).map(s=>`[Site] ${s.concorrente}: ${s.tipo_mudanca} → "${s.depois}"`),
+  ].filter(Boolean).join('\n\n');
 }
 async function genAI(tipo){
   if(!S.geminiKey)return alert('Configure a chave Gemini em Configurações.');
-  const data=buildData();if(!data)return alert('Cadastre concorrentes e execute uma varredura primeiro.');
-  document.getElementById('ai-spin').style.display='flex';document.getElementById('ai-e').style.display='none';document.getElementById('ai-res').innerHTML='';
-  const LBLS={diario:'Resumo do Dia',radar:'Análise das Varreduras',oportunidades:'Oportunidades',ameacas:'Ameaças',swot:'SWOT'};
+  const data=buildData();
+  if(!data.trim())return alert('Execute uma varredura primeiro para ter dados para analisar.');
+  document.getElementById('ai-spin').style.display='flex';
+  document.getElementById('ai-e').style.display='none';
+  document.getElementById('ai-res').innerHTML='';
+  const LBLS={diario:'Resumo do Dia',radar:'Análise das Varreduras',cidades:'Análise por Cidade',oportunidades:'Oportunidades',ameacas:'Ameaças',swot:'SWOT'};
   const P={
-    diario:`Analista de mercado imobiliário sênior. Escreva resumo executivo dos dados de concorrentes abaixo. Estruture: (1) Principais movimentos, (2) Padrões, (3) Alertas, (4) Implicações para a Ecovita. Português direto.\n\nDADOS:\n${data}`,
-    radar:`Analista de inteligência competitiva. Com base nas varreduras automáticas dos sites: (1) O que cada concorrente promove agora, (2) Mudanças detectadas, (3) Estratégias inferidas, (4) Recomendações para a Ecovita.\n\nDADOS:\n${data}`,
-    oportunidades:`Estrategista imobiliário. Identifique oportunidades não exploradas para a Ecovita com base nos dados. Para cada: o que é, por que existe, ação, urgência.\n\nDADOS:\n${data}`,
-    ameacas:`Analista de IC. Identifique principais ameaças e movimentos agressivos dos concorrentes que requerem atenção da Ecovita. Cite nomes e dados.\n\nDADOS:\n${data}`,
-    swot:`Consultor estratégico imobiliário. SWOT dos concorrentes com base nos dados. Onde Ecovita tem vantagem e onde precisa melhorar.\n\nDADOS:\n${data}`
+    diario:`Analista de mercado imobiliário sênior da Ecovita Construtora. Escreva resumo executivo dos dados de inteligência competitiva. Estruture: (1) Principais movimentos dos concorrentes, (2) Padrões identificados, (3) Alertas que merecem atenção, (4) Implicações estratégicas para a Ecovita. Seja direto e objetivo.\n\nDADOS:\n${data}`,
+    radar:`Analista de IC da Ecovita. Com base nas varreduras automáticas dos sites e buscas na internet: (1) O que cada concorrente está promovendo agora, (2) Mudanças detectadas, (3) Movimentos nas cidades monitoradas, (4) Estratégias inferidas, (5) Recomendações para a Ecovita.\n\nDADOS:\n${data}`,
+    cidades:`Analista imobiliário. Consolide as informações por cidade. Para cada cidade monitorada: o que os concorrentes estão fazendo lá, novos lançamentos identificados, movimentação de mercado, oportunidades para a Ecovita nessa praça.\n\nDADOS:\n${data}`,
+    oportunidades:`Estrategista imobiliário da Ecovita. Identifique oportunidades de mercado não exploradas ou mal exploradas pelos concorrentes. Para cada oportunidade: o que é, evidência nos dados, ação recomendada, urgência (alta/média/baixa).\n\nDADOS:\n${data}`,
+    ameacas:`Analista de IC da Ecovita. Identifique as principais ameaças dos concorrentes. Inclua: movimentos agressivos detectados, cidades com pressão competitiva, ações que podem impactar a Ecovita, urgência de resposta.\n\nDADOS:\n${data}`,
+    swot:`Consultor estratégico da Ecovita Construtora. Com base nos dados dos concorrentes, construa um SWOT competitivo: onde a Ecovita tem vantagem (S), onde está vulnerável (W), oportunidades de mercado (O), ameaças concretas (T).\n\nDADOS:\n${data}`
   };
-  try{const resp=await callGemini(P[tipo]);document.getElementById('ai-spin').style.display='none';const html=resp.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');document.getElementById('ai-res').innerHTML=`<div class="aib"><div class="aihd"><span>🤖</span><span class="ait">${LBLS[tipo]}</span><span class="aid">${today()}</span></div><div class="aix">${html}</div></div>`;S.aiResults.unshift({tipo:LBLS[tipo],data:today(),texto:html});if(S.aiResults.length>20)S.aiResults=S.aiResults.slice(0,20);save();}
-  catch(e){document.getElementById('ai-spin').style.display='none';document.getElementById('ai-res').innerHTML=`<div class="ab" style="background:var(--rd);border:1px solid var(--red)"><span class="ai2">❌</span><div class="abody"><strong>Erro</strong>${e.message}</div></div>`}
+  try{
+    const resp=await callGemini(P[tipo]);
+    document.getElementById('ai-spin').style.display='none';
+    const html=fmt(resp);
+    document.getElementById('ai-res').innerHTML=`<div class="aib"><div class="aihd"><span>🤖</span><span class="ait">${LBLS[tipo]}</span><span class="aid">${today()} ${now()}</span></div><div class="aix">${html}</div></div>`;
+    S.aiResults.unshift({tipo:LBLS[tipo],data:today(),texto:html});
+    if(S.aiResults.length>20)S.aiResults=S.aiResults.slice(0,20);
+    save();
+  }catch(e){
+    document.getElementById('ai-spin').style.display='none';
+    document.getElementById('ai-res').innerHTML=`<div class="ab" style="background:var(--rd);border:1px solid var(--red)"><span class="ai2">❌</span><div class="abody"><strong>Erro na API</strong>${e.message}</div></div>`;
+  }
 }
 
-// ===== DADOS =====
+// ===== BACKUP =====
 function expData(){const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`ic_ecovita_${today().replace(/\//g,'-')}.json`;a.click()}
-function impData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const im=JSON.parse(ev.target.result);if(confirm(`Importar ${im.concorrentes?.length||0} concorrentes?`)){S={...S,...im};save();render('overview');badges();alert('✅ Importado!')}}catch{alert('❌ Arquivo inválido.')}};r.readAsText(f)}
-function clrAll(){if(confirm('Remover TUDO?')){S={concorrentes:[],metaAds:[],siteChanges:[],instagram:[],aiResults:[],alertas:[],scans:[],geminiKey:'',theme:S.theme};save();render('overview');badges()}}
+function impData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const im=JSON.parse(ev.target.result);if(confirm(`Importar ${im.concorrentes?.length||0} concorrentes e dados?`)){S={...S,...im};save();render('overview');badges();alert('✅ Importado com sucesso!')}}catch{alert('❌ Arquivo inválido.')}};r.readAsText(f)}
+function clrAll(){if(confirm('Remover TODOS os dados? Esta ação não pode ser desfeita.')){S={concorrentes:[],metaAds:[],siteChanges:[],instagram:[],aiResults:[],alertas:[],scans:[],geminiKey:'',theme:S.theme};save();render('overview');badges()}}
 
-window.onload=()=>{load();applyTheme(S.theme||'dark');document.getElementById('last-t').textContent=new Date().toLocaleString('pt-BR');badges();rOverview()};
+// ===== INIT =====
+window.onload=()=>{
+  load();
+  applyTheme(S.theme||'dark');
+  document.getElementById('last-t').textContent=new Date().toLocaleString('pt-BR');
+  badges();
+  rOverview();
+  // Gemini status
+  if(S.geminiKey)document.getElementById('gm-txt').innerHTML='✅ <strong>Gemini configurado.</strong> IA ativa para análise automática.';
+};
 </script>
 </body>
 </html>
