@@ -450,11 +450,12 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
     <div class="fg ff">
       <label>📍 Cidades para Monitorar</label>
       <div class="city-input-row">
-        <input id="nc-city-input" placeholder="Ex: Goiânia" onkeydown="if(event.key==='Enter'){event.preventDefault();addCity()}">
-        <button class="btn bo bsm" type="button" onclick="addCity()">+ Adicionar</button>
+        <input id="nc-city-input" placeholder="Ex: Goiânia" style="flex:2" onkeydown="if(event.key==='Enter'){event.preventDefault();addCity()}">
+        <input id="nc-state-input" placeholder="GO" maxlength="2" style="width:52px;text-transform:uppercase" onkeydown="if(event.key==='Enter'){event.preventDefault();addCity()}">
+        <button class="btn bo bsm" type="button" onclick="addCity()">+ Add</button>
       </div>
       <div class="city-chips" id="city-chips"></div>
-      <div style="font-size:10px;color:var(--text3);margin-top:3px">Adicione as cidades onde este concorrente atua e que você quer monitorar</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:3px">Digite a cidade e a sigla do estado (ex: Goiânia + GO). Pressione Enter ou clique + Add.</div>
     </div>
     <div class="fg ff"><label>Observações</label><input id="nc7" placeholder="Principal concorrente MCMV em Goiânia..."></div>
   </div>
@@ -508,6 +509,44 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
     <div class="fg ff"><label>Link do post (opcional)</label><input id="ni6" placeholder="https://instagram.com/p/..."></div>
   </div>
   <div class="mft"><button class="btn bo" onclick="closeModal('m-ig')">Cancelar</button><button class="btn bp" onclick="addIG()">✅ Registrar</button></div>
+</div></div>
+
+<!-- EDITAR CONCORRENTE -->
+<div class="mov" id="m-edit"><div class="modal">
+  <h3>✏️ Editar Concorrente</h3>
+  <div class="fgrid">
+    <div class="fg"><label>Nome da Empresa *</label><input id="edit-nome" placeholder="Construtora Alpha"></div>
+    <div class="fg"><label>Site *</label><input id="edit-site" placeholder="alpha.com.br"></div>
+    <div class="fg"><label>Prioridade</label>
+      <select id="edit-prio"><option value="alta">🔴 Alta</option><option value="media">🟡 Média</option><option value="baixa">🟢 Baixa</option></select>
+    </div>
+    <div class="fg"><label>Segmento</label>
+      <select id="edit-seg"><option>MCMV</option><option>Médio padrão</option><option>Alto padrão</option><option>Todos</option></select>
+    </div>
+    <div class="fg ff">
+      <label>Link Biblioteca de Anúncios Meta</label>
+      <input id="edit-ads" placeholder="https://www.facebook.com/ads/library/?...">
+    </div>
+    <div class="fg ff">
+      <label>Instagram</label>
+      <input id="edit-ig" placeholder="@construtora.alpha">
+    </div>
+    <div class="fg ff">
+      <label>📍 Cidades Monitoradas</label>
+      <div class="city-input-row">
+        <input id="edit-city-input" placeholder="Ex: Anápolis" style="flex:2" onkeydown="if(event.key==='Enter'){event.preventDefault();addCity('edit')}">
+        <input id="edit-state-input" placeholder="GO" maxlength="2" style="width:52px;text-transform:uppercase" onkeydown="if(event.key==='Enter'){event.preventDefault();addCity('edit')}">
+        <button class="btn bo bsm" type="button" onclick="addCity('edit')">+ Add</button>
+      </div>
+      <div class="city-chips" id="edit-city-chips"></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:3px">Adicione ou remova cidades. As novas serão incluídas na próxima varredura.</div>
+    </div>
+    <div class="fg ff"><label>Observações</label><input id="edit-obs" placeholder=""></div>
+  </div>
+  <div class="mft">
+    <button class="btn bo" onclick="closeModal('m-edit')">Cancelar</button>
+    <button class="btn bp" onclick="saveEdit()">💾 Salvar Alterações</button>
+  </div>
 </div></div>
 
 <!-- RESULTADO VARREDURA -->
@@ -605,19 +644,28 @@ function popSels(){
 
 // ===== CIDADES (chips no modal) =====
 let tempCidades=[];
-function addCity(){
-  const inp=document.getElementById('nc-city-input');
-  const v=inp.value.trim();
-  if(!v||tempCidades.includes(v))return;
+let editingCompId=null; // null = novo cadastro, id = edição
+function addCity(prefix){
+  prefix=prefix||'nc';
+  const inp=document.getElementById(prefix+'-city-input');
+  const stInp=document.getElementById(prefix+'-state-input');
+  const cidade=inp.value.trim();
+  const estado=stInp?stInp.value.trim().toUpperCase():'';
+  if(!cidade)return;
+  const v=estado?`${cidade} - ${estado}`:cidade;
+  if(tempCidades.includes(v))return;
   tempCidades.push(v);
-  inp.value='';
-  renderCityChips();
+  inp.value='';if(stInp)stInp.value='';inp.focus();
+  renderCityChips(prefix);
 }
-function removeCity(c){tempCidades=tempCidades.filter(x=>x!==c);renderCityChips()}
-function renderCityChips(){
-  document.getElementById('city-chips').innerHTML=tempCidades.map(c=>`<span class="city-chip">📍${c}<button onclick="removeCity('${c}')" title="Remover">×</button></span>`).join('');
+function removeCity(c,prefix){prefix=prefix||'nc';tempCidades=tempCidades.filter(x=>x!==c);renderCityChips(prefix)}
+function renderCityChips(prefix){
+  prefix=prefix||'nc';
+  const el=document.getElementById(prefix==='nc'?'city-chips':'edit-city-chips');
+  if(!el)return;
+  el.innerHTML=tempCidades.map(c=>`<span class="city-chip">📍${c}<button onclick="removeCity('${c}','${prefix}')" title="Remover">×</button></span>`).join('');
 }
-function resetCityModal(){tempCidades=[];document.getElementById('city-chips').innerHTML='';document.getElementById('nc-city-input').value='';}
+function resetCityModal(){tempCidades=[];const chips=document.getElementById('city-chips');if(chips)chips.innerHTML='';const inp=document.getElementById('nc-city-input');if(inp)inp.value='';const st=document.getElementById('nc-state-input');if(st)st.value='';}
 
 // ===== JINA AI =====
 async function fetchSite(url){
@@ -880,6 +928,7 @@ async function addComp(){
   document.getElementById('btn-cancel-comp').disabled=false;
   document.getElementById('btn-add-comp').textContent='✅ Cadastrar e Varrer';
 
+  editingCompId=null;
   closeModal('m-comp');
   badges();render('overview');
 
@@ -971,6 +1020,7 @@ function rOverview(){
           <div style="font-size:10px;color:var(--text2);margin-top:2px">${sc?`${sc.date} ${sc.time}`:'Nunca varrido'}</div>
         </div>
         ${pill}
+        <button class="btn bb bsm" onclick="openEdit(${c.id})" style="font-size:10px;padding:3px 8px">✏️</button>
         <button id="scan-btn-${c.id}" class="btn bt bsm" onclick="scanOne(${c.id})" style="font-size:10px;padding:3px 8px">🔍</button>
       </div>`;
     }).join('')
@@ -1032,6 +1082,7 @@ function rComps(){
       <td><div style="display:flex;gap:4px">
         <button id="scan-btn-${c.id}" class="btn bt bsm" onclick="scanOne(${c.id})" title="Varrer agora">🔍</button>
         ${sc?`<button class="btn bo bsm" onclick="showScanResult(S.scans.find(s=>s.compId===${c.id}))" title="Ver resultado">👁</button>`:''}
+        <button class="btn bb bsm" onclick="openEdit(${c.id})" title="Editar">✏️</button>
         <button class="btn bo bsm" onclick="if(confirm('Remover ${c.nome}?')){rm('concorrentes',${c.id});S.scans=S.scans.filter(s=>s.compId!==${c.id});save();rComps();badges()}" title="Remover">✕</button>
       </div></td>
     </tr>`;
@@ -1227,6 +1278,48 @@ async function genAI(tipo){
     document.getElementById('ai-spin').style.display='none';
     document.getElementById('ai-res').innerHTML=`<div class="ab" style="background:var(--rd);border:1px solid var(--red)"><span class="ai2">❌</span><div class="abody"><strong>Erro na API</strong>${e.message}</div></div>`;
   }
+}
+
+// ===== EDITAR CONCORRENTE =====
+function openEdit(id){
+  const c=S.concorrentes.find(x=>x.id===id);if(!c)return;
+  editingCompId=id;
+  tempCidades=[...(c.cidades||[])];
+  document.getElementById('edit-nome').value=c.nome||'';
+  document.getElementById('edit-site').value=c.site||'';
+  document.getElementById('edit-ads').value=c.adsLibraryUrl||'';
+  document.getElementById('edit-ig').value=c.instagram||'';
+  document.getElementById('edit-obs').value=c.obs||'';
+  const ps=document.getElementById('edit-prio');
+  for(let i=0;i<ps.options.length;i++)if(ps.options[i].value===c.prioridade)ps.selectedIndex=i;
+  const ss=document.getElementById('edit-seg');
+  for(let i=0;i<ss.options.length;i++)if(ss.options[i].text===c.segmento)ss.selectedIndex=i;
+  document.getElementById('edit-city-input').value='';
+  document.getElementById('edit-state-input').value='';
+  renderCityChips('edit');
+  openModal('m-edit');
+}
+function saveEdit(){
+  if(!editingCompId)return;
+  const n=document.getElementById('edit-nome').value.trim();
+  const s=document.getElementById('edit-site').value.trim();
+  if(!n||!s)return alert('Nome e Site são obrigatórios.');
+  const idx=S.concorrentes.findIndex(x=>x.id===editingCompId);if(idx<0)return;
+  S.concorrentes[idx]={
+    ...S.concorrentes[idx],
+    nome:n,
+    site:s.replace(/^https?:\/\//,'').replace(/\/$/,''),
+    adsLibraryUrl:document.getElementById('edit-ads').value.trim(),
+    instagram:document.getElementById('edit-ig').value.trim(),
+    cidades:[...tempCidades],
+    prioridade:document.getElementById('edit-prio').value,
+    segmento:document.getElementById('edit-seg').options[document.getElementById('edit-seg').selectedIndex].text,
+    obs:document.getElementById('edit-obs').value.trim()
+  };
+  save();
+  closeModal('m-edit');
+  editingCompId=null;tempCidades=[];
+  badges();rComps();rOverview();
 }
 
 // ===== BACKUP =====
