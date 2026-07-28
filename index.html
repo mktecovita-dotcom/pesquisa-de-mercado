@@ -449,13 +449,21 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
     </div>
     <div class="fg ff">
       <label>📍 Cidades para Monitorar</label>
-      <div class="city-input-row">
-        <input id="nc-city-input" placeholder="Ex: Goiânia" style="flex:2" onkeydown="if(event.key==='Enter'){event.preventDefault();addCity()}">
-        <input id="nc-state-input" placeholder="GO" maxlength="2" style="width:52px;text-transform:uppercase" onkeydown="if(event.key==='Enter'){event.preventDefault();addCity()}">
-        <button class="btn bo bsm" type="button" onclick="addCity()">+ Add</button>
+      <div style="display:flex;gap:7px;margin-bottom:6px">
+        <select id="nc-state-sel" onchange="filterCities('nc')" style="width:95px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;padding:7px 8px">
+          <option value="">Estado</option>
+        </select>
+        <div style="flex:1;position:relative">
+          <input id="nc-city-input" placeholder="Digite para buscar cidade..." autocomplete="off"
+            oninput="showCitySuggestions('nc')" onkeydown="citySuggestKey(event,'nc')"
+            onfocus="showCitySuggestions('nc')" style="width:100%">
+          <div id="nc-city-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:6px;z-index:200;max-height:180px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.3)"></div>
+        </div>
+        <button class="btn bo bsm" type="button" onclick="addCityFromSel('nc')">+ Add</button>
       </div>
       <div class="city-chips" id="city-chips"></div>
-      <div style="font-size:10px;color:var(--text3);margin-top:3px">Digite a cidade e a sigla do estado (ex: Goiânia + GO). Pressione Enter ou clique + Add.</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:3px">Selecione o estado, busque a cidade e clique + Add (ou Enter).</div>
+    </div>
     </div>
     <div class="fg ff"><label>Observações</label><input id="nc7" placeholder="Principal concorrente MCMV em Goiânia..."></div>
   </div>
@@ -533,13 +541,20 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
     </div>
     <div class="fg ff">
       <label>📍 Cidades Monitoradas</label>
-      <div class="city-input-row">
-        <input id="edit-city-input" placeholder="Ex: Anápolis" style="flex:2" onkeydown="if(event.key==='Enter'){event.preventDefault();addCity('edit')}">
-        <input id="edit-state-input" placeholder="GO" maxlength="2" style="width:52px;text-transform:uppercase" onkeydown="if(event.key==='Enter'){event.preventDefault();addCity('edit')}">
-        <button class="btn bo bsm" type="button" onclick="addCity('edit')">+ Add</button>
+      <div style="display:flex;gap:7px;margin-bottom:6px">
+        <select id="edit-state-sel" style="width:95px;background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;padding:7px 8px">
+          <option value="">Estado</option>
+        </select>
+        <div style="flex:1;position:relative">
+          <input id="edit-city-input" placeholder="Digite para buscar cidade..." autocomplete="off"
+            oninput="showCitySuggestions('edit')" onkeydown="citySuggestKey(event,'edit')"
+            onfocus="showCitySuggestions('edit')" style="width:100%">
+          <div id="edit-city-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:6px;z-index:200;max-height:180px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.3)"></div>
+        </div>
+        <button class="btn bo bsm" type="button" onclick="addCityFromSel('edit')">+ Add</button>
       </div>
       <div class="city-chips" id="edit-city-chips"></div>
-      <div style="font-size:10px;color:var(--text3);margin-top:3px">Adicione ou remova cidades. As novas serão incluídas na próxima varredura.</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:3px">Adicione ou remova cidades. As novas entram na próxima varredura.</div>
     </div>
     <div class="fg ff"><label>Observações</label><input id="edit-obs" placeholder=""></div>
   </div>
@@ -642,30 +657,122 @@ function popSels(){
   });
 }
 
-// ===== CIDADES (chips no modal) =====
-let tempCidades=[];
-let editingCompId=null; // null = novo cadastro, id = edição
-function addCity(prefix){
-  prefix=prefix||'nc';
-  const inp=document.getElementById(prefix+'-city-input');
-  const stInp=document.getElementById(prefix+'-state-input');
-  const cidade=inp.value.trim();
-  const estado=stInp?stInp.value.trim().toUpperCase():'';
-  if(!cidade)return;
-  const v=estado?`${cidade} - ${estado}`:cidade;
-  if(tempCidades.includes(v))return;
-  tempCidades.push(v);
-  inp.value='';if(stInp)stInp.value='';inp.focus();
-  renderCityChips(prefix);
+// ===== CIDADES — LISTA BRASIL =====
+const ESTADOS=[['AC','Acre'],['AL','Alagoas'],['AM','Amazonas'],['AP','Amapá'],['BA','Bahia'],['CE','Ceará'],['DF','Distrito Federal'],['ES','Espírito Santo'],['GO','Goiás'],['MA','Maranhão'],['MG','Minas Gerais'],['MS','Mato Grosso do Sul'],['MT','Mato Grosso'],['PA','Pará'],['PB','Paraíba'],['PE','Pernambuco'],['PI','Piauí'],['PR','Paraná'],['RJ','Rio de Janeiro'],['RN','Rio Grande do Norte'],['RO','Rondônia'],['RR','Roraima'],['RS','Rio Grande do Sul'],['SC','Santa Catarina'],['SE','Sergipe'],['SP','São Paulo'],['TO','Tocantins']];
+const CIDADES_BR={
+  AC:['Acrelândia','Assis Brasil','Brasiléia','Cruzeiro do Sul','Feijó','Manoel Urbano','Plácido de Castro','Rio Branco','Sena Madureira','Senador Guiomard','Tarauacá','Xapuri'],
+  AL:['Arapiraca','Atalaia','Batalha','Boca da Mata','Campo Alegre','Coruripe','Delmiro Gouveia','Maceió','Marechal Deodoro','Palmeira dos Índios','Penedo','Pilar','Rio Largo','Santana do Ipanema','São Miguel dos Campos','União dos Palmares','Viçosa'],
+  AM:['Coari','Humaitá','Itacoatiara','Manacapuru','Manaus','Maués','Parintins','São Gabriel da Cachoeira','Tefé'],
+  AP:['Laranjal do Jari','Macapá','Oiapoque','Santana'],
+  BA:['Alagoinhas','Barreiras','Brumado','Camaçari','Cruz das Almas','Eunápolis','Feira de Santana','Guanambi','Ilhéus','Ipiaú','Irecê','Itabuna','Itamaraju','Itapetinga','Jacobina','Jequié','Juazeiro','Lauro de Freitas','Luís Eduardo Magalhães','Paulo Afonso','Porto Seguro','Salvador','Seabra','Senhor do Bonfim','Simões Filho','Teixeira de Freitas','Valença','Vitória da Conquista'],
+  CE:['Aquiraz','Aracati','Barbalha','Canindé','Caucaia','Crato','Fortaleza','Horizonte','Iguatu','Itapipoca','Juazeiro do Norte','Maracanaú','Maranguape','Morada Nova','Pacatuba','Quixadá','Russas','Sobral','Tianguá'],
+  DF:['Águas Claras','Brasília','Ceilândia','Gama','Guará','Paranoá','Planaltina','Recanto das Emas','Samambaia','Santa Maria','São Sebastião','Sobradinho','Taguatinga','Vicente Pires'],
+  ES:['Aracruz','Cachoeiro de Itapemirim','Cariacica','Colatina','Guarapari','Linhares','Nova Venécia','São Mateus','Serra','Vila Velha','Vitória'],
+  GO:['Águas Lindas de Goiás','Alexânia','Anápolis','Aparecida de Goiânia','Caldas Novas','Catalão','Cidade Ocidental','Cristalina','Formosa','Goiânia','Goianésia','Inhumas','Itumbiara','Jataí','Luziânia','Mineiros','Morrinhos','Novo Gama','Pirenópolis','Planaltina','Quirinópolis','Rio Verde','Senador Canedo','Trindade','Valparaíso de Goiás'],
+  MA:['Açailândia','Bacabal','Balsas','Barra do Corda','Caxias','Codó','Grajaú','Imperatriz','Itapecuru Mirim','Paço do Lumiar','Pinheiro','São José de Ribamar','São Luís','Timon','Viana'],
+  MG:['Alfenas','Araguari','Araxá','Barbacena','Betim','Belo Horizonte','Caratinga','Cataguases','Conselheiro Lafaiete','Contagem','Coronel Fabriciano','Curvelo','Divinópolis','Formiga','Frutal','Governador Valadares','Ibirité','Ipatinga','Itabira','Itaúna','Ituiutaba','João Monlevade','Juiz de Fora','Lagoa Santa','Lavras','Manhuaçu','Montes Claros','Muriaé','Nova Lima','Nova Serrana','Pará de Minas','Passos','Patos de Minas','Patrocínio','Poços de Caldas','Pouso Alegre','Ribeirão das Neves','Sabará','Santa Luzia','Sete Lagoas','Teófilo Otoni','Uberaba','Uberlândia','Varginha','Vespasiano','Viçosa'],
+  MS:['Aquidauana','Campo Grande','Corumbá','Dourados','Maracaju','Naviraí','Nova Andradina','Ponta Porã','Três Lagoas'],
+  MT:['Alta Floresta','Barra do Garças','Cáceres','Cuiabá','Lucas do Rio Verde','Pontes e Lacerda','Primavera do Leste','Rondonópolis','Sinop','Sorriso','Tangará da Serra','Várzea Grande'],
+  PA:['Abaetetuba','Altamira','Ananindeua','Barcarena','Belém','Bragança','Cametá','Castanhal','Itaituba','Marabá','Parauapebas','Redenção','Santarém','Tucuruí'],
+  PB:['Bayeux','Cabedelo','Cajazeiras','Campina Grande','Guarabira','João Pessoa','Patos','Santa Rita','Sousa'],
+  PE:['Cabo de Santo Agostinho','Caruaru','Garanhuns','Ipojuca','Jaboatão dos Guararapes','Olinda','Paulista','Petrolina','Recife','Santa Cruz do Capibaribe','Vitória de Santo Antão'],
+  PI:['Campo Maior','Floriano','Parnaíba','Picos','Piripiri','Teresina'],
+  PR:['Almirante Tamandaré','Apucarana','Araucária','Cambé','Campo Largo','Campo Mourão','Cascavel','Colombo','Curitiba','Foz do Iguaçu','Francisco Beltrão','Guarapuava','Londrina','Maringá','Paranaguá','Paranavaí','Pato Branco','Pinhais','Piraquara','Ponta Grossa','São José dos Pinhais','Toledo','Umuarama'],
+  RJ:['Angra dos Reis','Barra Mansa','Belford Roxo','Cabo Frio','Campos dos Goytacazes','Duque de Caxias','Itaboraí','Macaé','Magé','Mesquita','Nilópolis','Niterói','Nova Friburgo','Nova Iguaçu','Petrópolis','Queimados','Resende','Rio de Janeiro','Rio das Ostras','São Gonçalo','São João de Meriti','Teresópolis','Volta Redonda'],
+  RN:['Caicó','Ceará-Mirim','Macaíba','Mossoró','Natal','Parnamirim','São Gonçalo do Amarante','Santa Cruz'],
+  RO:['Ariquemes','Cacoal','Ji-Paraná','Porto Velho','Vilhena'],
+  RR:['Boa Vista','Rorainópolis'],
+  RS:['Alvorada','Bagé','Bento Gonçalves','Cachoeirinha','Canoas','Caxias do Sul','Cruz Alta','Erechim','Gravataí','Lajeado','Novo Hamburgo','Passo Fundo','Pelotas','Porto Alegre','Rio Grande','Santa Cruz do Sul','Santa Maria','Santo Ângelo','São Leopoldo','Sapucaia do Sul','Uruguaiana','Viamão'],
+  SC:['Balneário Camboriú','Blumenau','Brusque','Caçador','Camboriú','Chapecó','Concórdia','Criciúma','Florianópolis','Itajaí','Itapema','Jaraguá do Sul','Joinville','Lages','Palhoça','São José','Tubarão'],
+  SE:['Aracaju','Estância','Itabaiana','Lagarto','Nossa Senhora do Socorro','São Cristóvão'],
+  SP:['Americana','Araraquara','Araçatuba','Barueri','Bauru','Botucatu','Bragança Paulista','Cajamar','Campinas','Carapicuíba','Cotia','Diadema','Franca','Guarujá','Guarulhos','Hortolândia','Indaiatuba','Itapevi','Itaquaquecetuba','Itu','Jacareí','Jaú','Jundiaí','Limeira','Marília','Mauá','Mogi das Cruzes','Osasco','Paulínia','Piracicaba','Pirassununga','Praia Grande','Presidente Prudente','Ribeirão Preto','Rio Claro','Santos','São Bernardo do Campo','São Caetano do Sul','São Carlos','São José do Rio Pardo','São José do Rio Preto','São José dos Campos','São Paulo','São Vicente','Sertãozinho','Sorocaba','Sumaré','Suzano','Taboão da Serra','Taubaté','Votorantim'],
+  TO:['Araguaína','Gurupi','Palmas','Paraíso do Tocantins','Porto Nacional']
+};
+function initStateSelects(){
+  ESTADOS.forEach(([sigla,nome])=>{
+    ['nc-state-sel','edit-state-sel'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el){const o=document.createElement('option');o.value=sigla;o.textContent=`${sigla} — ${nome}`;el.appendChild(o)}
+    });
+  });
 }
-function removeCity(c,prefix){prefix=prefix||'nc';tempCidades=tempCidades.filter(x=>x!==c);renderCityChips(prefix)}
+let tempCidades=[];
+let editingCompId=null;
+let suggestIdx=-1;
+function filterCities(prefix){}
+function normStr(s){return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+function showCitySuggestions(prefix){
+  const inp=document.getElementById(prefix+'-city-input');
+  const stateSel=document.getElementById(prefix+'-state-sel');
+  const dropdown=document.getElementById(prefix+'-city-dropdown');
+  if(!inp||!dropdown)return;
+  const q=normStr(inp.value.trim());
+  const estado=stateSel?stateSel.value:'';
+  let cities=[];
+  if(estado&&CIDADES_BR[estado]){cities=CIDADES_BR[estado].map(c=>({city:c,state:estado}));}
+  else{Object.entries(CIDADES_BR).forEach(([st,arr])=>arr.forEach(c=>cities.push({city:c,state:st})));}
+  if(q){cities=cities.filter(x=>normStr(x.city).includes(q));}
+  cities=cities.slice(0,60);
+  if(!cities.length){dropdown.style.display='none';return}
+  suggestIdx=-1;
+  dropdown.innerHTML=cities.map((x,i)=>`<div class="csi" data-idx="${i}" data-city="${x.city}" data-state="${x.state}" onclick="selectCS(this,'${prefix}')" onmouseenter="suggestIdx=${i};hlSuggest('${prefix}')"
+    style="padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+    <span>${x.city}</span><span style="font-size:10px;font-weight:700;color:var(--blue)">${x.state}</span></div>`).join('');
+  dropdown.style.display='block';
+}
+function hlSuggest(prefix){
+  const dd=document.getElementById(prefix+'-city-dropdown');if(!dd)return;
+  dd.querySelectorAll('.csi').forEach((el,i)=>{el.style.background=i===suggestIdx?'var(--bg3)':'';});
+}
+function selectCS(el,prefix){
+  const v=`${el.dataset.city} - ${el.dataset.state}`;
+  if(!tempCidades.includes(v)){tempCidades.push(v);renderCityChips(prefix);}
+  const inp=document.getElementById(prefix+'-city-input');if(inp)inp.value='';
+  const dd=document.getElementById(prefix+'-city-dropdown');if(dd)dd.style.display='none';
+  suggestIdx=-1;
+  if(inp)inp.focus();
+}
+function citySuggestKey(e,prefix){
+  const dd=document.getElementById(prefix+'-city-dropdown');
+  const items=dd?dd.querySelectorAll('.csi'):[];
+  if(e.key==='ArrowDown'){e.preventDefault();suggestIdx=Math.min(suggestIdx+1,items.length-1);hlSuggest(prefix);items[suggestIdx]?.scrollIntoView({block:'nearest'});}
+  else if(e.key==='ArrowUp'){e.preventDefault();suggestIdx=Math.max(suggestIdx-1,0);hlSuggest(prefix);items[suggestIdx]?.scrollIntoView({block:'nearest'});}
+  else if(e.key==='Enter'){e.preventDefault();if(suggestIdx>=0&&items[suggestIdx])selectCS(items[suggestIdx],prefix);else addCityFromSel(prefix);}
+  else if(e.key==='Escape'){if(dd)dd.style.display='none';}
+}
+function addCityFromSel(prefix){
+  const inp=document.getElementById(prefix+'-city-input');
+  const stateSel=document.getElementById(prefix+'-state-sel');
+  const dd=document.getElementById(prefix+'-city-dropdown');
+  const cidade=inp?inp.value.trim():'';if(!cidade)return;
+  const estado=stateSel?stateSel.value:'';
+  const v=estado?`${cidade} - ${estado}`:cidade;
+  if(!tempCidades.includes(v)){tempCidades.push(v);renderCityChips(prefix);}
+  if(inp)inp.value='';if(dd)dd.style.display='none';suggestIdx=-1;
+}
+function removeCity(c,prefix){prefix=prefix||'nc';tempCidades=tempCidades.filter(x=>x!==c);renderCityChips(prefix);}
 function renderCityChips(prefix){
   prefix=prefix||'nc';
-  const el=document.getElementById(prefix==='nc'?'city-chips':'edit-city-chips');
-  if(!el)return;
-  el.innerHTML=tempCidades.map(c=>`<span class="city-chip">📍${c}<button onclick="removeCity('${c}','${prefix}')" title="Remover">×</button></span>`).join('');
+  const el=document.getElementById(prefix==='nc'?'city-chips':'edit-city-chips');if(!el)return;
+  el.innerHTML=tempCidades.map(c=>`<span class="city-chip">📍${c}<button onclick="removeCity(this.parentElement.dataset.v,'${prefix}')" title="Remover">×</button></span>`).join('');
+  el.querySelectorAll('.city-chip').forEach((chip,i)=>chip.dataset.v=tempCidades[i]);
 }
-function resetCityModal(){tempCidades=[];const chips=document.getElementById('city-chips');if(chips)chips.innerHTML='';const inp=document.getElementById('nc-city-input');if(inp)inp.value='';const st=document.getElementById('nc-state-input');if(st)st.value='';}
+function resetCityModal(){
+  tempCidades=[];
+  ['city-chips','nc-city-input','nc-state-sel','nc-city-dropdown'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(el.tagName==='INPUT'||el.tagName==='SELECT')el.value='';
+    else el.innerHTML='';
+    if(id.includes('dropdown'))el.style.display='none';
+  });
+}
+document.addEventListener('click',e=>{
+  ['nc-city-dropdown','edit-city-dropdown'].forEach(id=>{
+    const dd=document.getElementById(id);
+    const inp=document.getElementById(id.replace('dropdown','input'));
+    if(dd&&!dd.contains(e.target)&&e.target!==inp)dd.style.display='none';
+  });
+});
 
 // ===== JINA AI =====
 async function fetchSite(url){
@@ -677,8 +784,9 @@ async function fetchSite(url){
   return await r.text();
 }
 async function searchWeb(q){
-  const r=await fetch(`https://s.jina.ai/${encodeURIComponent(q)}`,{
-    headers:{'Accept':'text/plain','X-Return-Format':'text'}
+  const googleUrl=`https://www.google.com/search?q=${encodeURIComponent(q)}&hl=pt-BR&gl=BR`;
+  const r=await fetch(`https://r.jina.ai/${googleUrl}`,{
+    headers:{'Accept':'text/plain','X-Return-Format':'text','X-Timeout':'20'}
   });
   if(!r.ok)throw new Error(`Erro ${r.status}`);
   return await r.text();
@@ -1295,7 +1403,8 @@ function openEdit(id){
   const ss=document.getElementById('edit-seg');
   for(let i=0;i<ss.options.length;i++)if(ss.options[i].text===c.segmento)ss.selectedIndex=i;
   document.getElementById('edit-city-input').value='';
-  document.getElementById('edit-state-input').value='';
+  const esel=document.getElementById('edit-state-sel');if(esel)esel.value='';
+  const edd=document.getElementById('edit-city-dropdown');if(edd)edd.style.display='none';
   renderCityChips('edit');
   openModal('m-edit');
 }
@@ -1329,12 +1438,13 @@ function clrAll(){if(confirm('Remover TODOS os dados? Esta ação não pode ser 
 
 // ===== INIT =====
 window.onload=()=>{
+
   load();
   applyTheme(S.theme||'dark');
+  initStateSelects();
   document.getElementById('last-t').textContent=new Date().toLocaleString('pt-BR');
   badges();
   rOverview();
-  // Gemini status
   if(S.geminiKey)document.getElementById('gm-txt').innerHTML='✅ <strong>Gemini configurado.</strong> IA ativa para análise automática.';
 };
 </script>
