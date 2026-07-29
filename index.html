@@ -825,16 +825,12 @@ async function searchWeb(q){
 }
 
 function cleanSearchResult(txt){
-  // Remove linhas de UI (filtros de tempo, regiões, navegação)
-  const uiPatterns=[/^(any time|past day|past week|past month|past year)$/i,/^(all regions|brazil|argentina|australia|canada|united|belgium|austria|bulgaria)/i,/^(more results|next page|previous|duckduckgo)/i,/^\s*$/, /^https?:\/\//,/^\d+\s*$/];
-  const lines=txt.split('
-').map(l=>l.trim()).filter(l=>{
+  const uiPatterns=[/^(any time|past day|past week|past month|past year)$/i,/^(all regions|brazil|argentina|australia|canada|united|belgium|austria|bulgaria)/i,/^(more results|next page|previous|duckduckgo)/i,/^\s*$/,/^https?:\/\//,/^\d+\s*$/];
+  const lines=txt.split('\n').map(l=>l.trim()).filter(l=>{
     if(l.length<15)return false;
     return !uiPatterns.some(p=>p.test(l));
   });
-  // Pega primeiros 80 linhas relevantes (≈4000 chars)
-  return lines.slice(0,80).join('
-');
+  return lines.slice(0,80).join('\n');
 }
 function hash(str){
   const s=str.replace(/\d{1,2}\/\d{1,2}\/\d{4}/g,'').replace(/\d{2}:\d{2}/g,'').replace(/\s+/g,' ').substring(0,6000);
