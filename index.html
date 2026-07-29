@@ -399,6 +399,19 @@ tr:last-child td{border-bottom:none}tr:hover td{background:var(--bg3)}
     <!-- CONFIG -->
     <div class="page" id="page-config">
       <div class="card">
+        <div class="chd"><span class="ct">⚡ Groq IA — Recomendado para o Brasil (Gratuito)</span></div>
+        <div style="background:var(--gd);border:1px solid var(--green);border-radius:8px;padding:11px;margin-bottom:13px;font-size:13px;color:var(--green)">✅ <strong>100% gratuito. Sem restrições regionais. Mais rápido.</strong> Obtenha sua chave em <a href="https://console.groq.com/keys" target="_blank" style="color:var(--green);font-weight:700">console.groq.com/keys</a> — 1 minuto, sem cartão.</div>
+        <div class="infob" style="margin-bottom:13px"><span>ℹ️</span>
+          <div>Modelo: <strong>LLaMA 3.3 70B</strong> — 6.000 análises/dia, 30/minuto. Se configurado, será usado no lugar do Gemini.</div>
+        </div>
+        <div class="fg" style="margin-bottom:9px"><label>Chave API Groq</label><input type="password" id="cfg-groq" placeholder="gsk_..."></div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+          <button class="btn bp" onclick="saveGroq()">💾 Salvar</button>
+          <button class="btn bo" onclick="testGroq()">🧪 Testar</button>
+          <span id="groq-res" style="font-size:12px;color:var(--text2)"></span>
+        </div>
+      </div>
+      <div class="card">
         <div class="chd"><span class="ct">🤖 Google Gemini IA (Gratuito)</span></div>
         <div class="infob" style="margin-bottom:13px"><span>ℹ️</span>
           <div>100% gratuito. 15 req/min, 1M tokens/dia. Obtenha sua chave em <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--blue)">aistudio.google.com</a> — 2 minutos, sem cartão de crédito.</div>
@@ -631,6 +644,7 @@ function load(){
   // migrar dados sem cidades
   S.concorrentes=S.concorrentes.map(c=>({...c,cidades:c.cidades||[]}));
   if(S.geminiKey)document.getElementById('cfg-gem').value=S.geminiKey;
+  if(S.groqKey)document.getElementById('cfg-groq').value=S.groqKey;
 }
 
 // ===== TEMA =====
@@ -800,13 +814,27 @@ async function fetchSite(url){
   return await r.text();
 }
 async function searchWeb(q){
-  // DuckDuckGo via Jina Reader — sem CAPTCHA, sem bloqueio de IP
-  const ddgUrl=`https://html.duckduckgo.com/html/?q=${encodeURIComponent(q)}&kl=br-pt`;
-  const r=await fetch(`https://r.jina.ai/${ddgUrl}`,{
+  // DuckDuckGo Lite — HTML mínimo, só resultados, sem listas de países
+  const url=`https://lite.duckduckgo.com/lite/?q=${encodeURIComponent(q)}&kl=br-pt`;
+  const r=await fetch(`https://r.jina.ai/${url}`,{
     headers:{'Accept':'text/plain','X-Return-Format':'text','X-Timeout':'20'}
   });
   if(!r.ok)throw new Error(`Erro ${r.status}`);
-  return await r.text();
+  const raw=await r.text();
+  return cleanSearchResult(raw);
+}
+
+function cleanSearchResult(txt){
+  // Remove linhas de UI (filtros de tempo, regiões, navegação)
+  const uiPatterns=[/^(any time|past day|past week|past month|past year)$/i,/^(all regions|brazil|argentina|australia|canada|united|belgium|austria|bulgaria)/i,/^(more results|next page|previous|duckduckgo)/i,/^\s*$/, /^https?:\/\//,/^\d+\s*$/];
+  const lines=txt.split('
+').map(l=>l.trim()).filter(l=>{
+    if(l.length<15)return false;
+    return !uiPatterns.some(p=>p.test(l));
+  });
+  // Pega primeiros 80 linhas relevantes (≈4000 chars)
+  return lines.slice(0,80).join('
+');
 }
 function hash(str){
   const s=str.replace(/\d{1,2}\/\d{1,2}\/\d{4}/g,'').replace(/\d{2}:\d{2}/g,'').replace(/\s+/g,' ').substring(0,6000);
@@ -874,7 +902,8 @@ async function scanCompetitor(comp, updateUI){
 
   // PASSO 3: Análise IA
   const ta=document.getElementById('tog-ai-scan');
-  if(S.geminiKey&&(!ta||ta.classList.contains('on'))){
+  const hasAI=S.groqKey||S.geminiKey;
+  if(hasAI&&(!ta||ta.classList.contains('on'))){
     if(updateUI)stepSet('ai','running','🤖 IA analisando tudo...');
     try{
       const searchSummary=res.searches.filter(s=>s.result).map(s=>`\n--- ${s.label} ---\n${trunc(s.result,1000)}`).join('\n');
@@ -906,7 +935,7 @@ ${trunc(res.siteText,2500)||'Não disponível'}
 BUSCAS NA INTERNET:
 ${trunc(searchSummary,3000)||'Sem resultados'}`;
 
-      res.analysis=await callGemini(prompt);
+      res.analysis=await callAI(prompt);
       if(updateUI)stepSet('ai','done','✅ Análise IA concluída');
     }catch(e){
       res.analysisError=e.message;
@@ -1346,6 +1375,14 @@ function rAlertas(){
 }
 
 // ===== GEMINI =====
+function saveGroq(){S.groqKey=document.getElementById('cfg-groq').value.trim();save();document.getElementById('groq-res').textContent='✅ Salvo!';setTimeout(()=>document.getElementById('groq-res').textContent='',2500)}
+async function testGroq(){
+  const k=document.getElementById('cfg-groq').value.trim()||S.groqKey;
+  if(!k)return alert('Cole a chave Groq primeiro.');
+  document.getElementById('groq-res').textContent='⏳ Testando...';
+  try{const r=await callGroq('Responda apenas: OK',k);document.getElementById('groq-res').textContent='✅ '+r.substring(0,30)}
+  catch(e){document.getElementById('groq-res').textContent='❌ '+e.message}
+}
 function saveGem(){S.geminiKey=document.getElementById('cfg-gem').value.trim();save();badges();document.getElementById('gem-res').textContent='✅ Salvo!';setTimeout(()=>document.getElementById('gem-res').textContent='',2500)}
 async function testGem(){
   const k=document.getElementById('cfg-gem').value.trim()||S.geminiKey;
@@ -1354,19 +1391,38 @@ async function testGem(){
   try{const r=await callGemini('Responda apenas: OK',k);document.getElementById('gem-res').textContent='✅ '+r.substring(0,30)}
   catch(e){document.getElementById('gem-res').textContent='❌ '+e.message}
 }
+async function callAI(prompt){
+  // Tenta Groq primeiro se configurado (mais confiável no Brasil)
+  if(S.groqKey){
+    try{return await callGroq(prompt,S.groqKey)}catch(e){console.warn('Groq falhou:',e.message)}
+  }
+  // Fallback: Gemini com múltiplos modelos
+  if(S.geminiKey){return await callGemini(prompt,S.geminiKey)}
+  throw new Error('Configure o Groq ou Gemini em Configurações.');
+}
+
+async function callGroq(prompt,key){
+  const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},
+    body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:[{role:'user',content:prompt}],max_tokens:1500,temperature:0.4})
+  });
+  if(!r.ok){const e=await r.json();throw new Error(e.error?.message||`HTTP ${r.status}`)}
+  const d=await r.json();
+  return d.choices?.[0]?.message?.content||'Sem resposta';
+}
+
 async function callGemini(prompt,key){
   const k=key||S.geminiKey;
-  if(!k)throw new Error('Chave não configurada');
-  // Tenta modelo que funcionou antes primeiro, depois os demais
+  if(!k)throw new Error('Chave Gemini não configurada');
+  const saved=S._workingModel||'';
   const ALL=[
     'v1beta/models/gemini-2.0-flash-lite:generateContent',
     'v1beta/models/gemini-1.5-flash:generateContent',
     'v1beta/models/gemini-1.5-flash-8b:generateContent',
     'v1/models/gemini-1.5-flash:generateContent',
-    'v1/models/gemini-1.5-flash-8b:generateContent',
     'v1beta/models/gemini-2.0-flash:generateContent',
   ];
-  const saved=S._workingModel||'';
   const MODELS=saved?[saved,...ALL.filter(m=>m!==saved)]:ALL;
   let lastErr='';
   for(const model of MODELS){
@@ -1376,15 +1432,12 @@ async function callGemini(prompt,key){
         body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
       });
       const d=await r.json();
-      if(!r.ok){lastErr=d.error?.message||`HTTP ${r.status}`;continue;}
+      if(!r.ok){lastErr=d.error?.message||`HTTP ${r.status}`;continue}
       const txt=d.candidates?.[0]?.content?.parts?.[0]?.text;
-      if(txt){
-        if(S._workingModel!==model){S._workingModel=model;save();}
-        return txt;
-      }
-    }catch(e){lastErr=e.message;}
+      if(txt){if(S._workingModel!==model){S._workingModel=model;save()}return txt}
+    }catch(e){lastErr=e.message}
   }
-  throw new Error('Nenhum modelo disponível. '+lastErr);
+  throw new Error(lastErr||'Nenhum modelo Gemini disponível');
 }
 
 function buildData(){
@@ -1416,7 +1469,7 @@ async function genAI(tipo){
     swot:`Consultor estratégico da Ecovita Construtora. Com base nos dados dos concorrentes, construa um SWOT competitivo: onde a Ecovita tem vantagem (S), onde está vulnerável (W), oportunidades de mercado (O), ameaças concretas (T).\n\nDADOS:\n${data}`
   };
   try{
-    const resp=await callGemini(P[tipo]);
+    const resp=await callAI(P[tipo]);
     document.getElementById('ai-spin').style.display='none';
     const html=fmt(resp);
     document.getElementById('ai-res').innerHTML=`<div class="aib"><div class="aihd"><span>🤖</span><span class="ait">${LBLS[tipo]}</span><span class="aid">${today()} ${now()}</span></div><div class="aix">${html}</div></div>`;
@@ -1475,7 +1528,7 @@ function saveEdit(){
 // ===== BACKUP =====
 function expData(){const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`ic_ecovita_${today().replace(/\//g,'-')}.json`;a.click()}
 function impData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{try{const im=JSON.parse(ev.target.result);if(confirm(`Importar ${im.concorrentes?.length||0} concorrentes e dados?`)){S={...S,...im};save();render('overview');badges();alert('✅ Importado com sucesso!')}}catch{alert('❌ Arquivo inválido.')}};r.readAsText(f)}
-function clrAll(){if(confirm('Remover TODOS os dados? Esta ação não pode ser desfeita.')){S={concorrentes:[],metaAds:[],siteChanges:[],instagram:[],aiResults:[],alertas:[],scans:[],geminiKey:'',theme:S.theme};save();render('overview');badges()}}
+function clrAll(){if(confirm('Remover TODOS os dados? Esta ação não pode ser desfeita.')){S={concorrentes:[],metaAds:[],siteChanges:[],instagram:[],aiResults:[],alertas:[],scans:[],geminiKey:'',groqKey:'',theme:S.theme};save();render('overview');badges()}}
 
 // ===== INIT =====
 window.onload=()=>{
@@ -1486,7 +1539,8 @@ window.onload=()=>{
   document.getElementById('last-t').textContent=new Date().toLocaleString('pt-BR');
   badges();
   rOverview();
-  if(S.geminiKey)document.getElementById('gm-txt').innerHTML='✅ <strong>Gemini configurado.</strong> IA ativa para análise automática.';
+  const _ai=S.groqKey?'⚡ <strong>Groq configurado.</strong> IA ativa (LLaMA 3.3).':S.geminiKey?'✅ <strong>Gemini configurado.</strong> IA ativa para análise.':'Configure o <strong>Groq</strong> (recomendado) ou <strong>Gemini</strong> em Configurações.';
+  document.getElementById('gm-txt').innerHTML=_ai;
 };
 </script>
 </body>
