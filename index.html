@@ -855,6 +855,7 @@ async function scanCompetitor(comp, updateUI){
     cidades: comp.cidades||[],
     date:today(), time:now(),
     siteText:'', siteHash:'', siteChanged:false, siteError:'',
+    changeSummary:'', changeSummaryError:'',
     searches:[], // [{query, result, error}]
     analysis:'', analysisError:''
   };
@@ -867,6 +868,34 @@ async function scanCompetitor(comp, updateUI){
     res.siteHash=hash(res.siteText);
     if(prev&&prev.siteHash&&prev.siteHash!==res.siteHash)res.siteChanged=true;
     if(updateUI)stepSet('site','done',`Site lido — ${res.siteChanged?'⚠️ CONTEÚDO ALTERADO':'sem mudanças'}`);
+
+    // PASSO 1b: Resumo do que mudou
+    if(res.siteChanged&&prev&&prev.siteText&&(S.groqKey||S.geminiKey)){
+      if(updateUI)stepSet('chgsum','running','🔎 Identificando o que mudou...');
+      try{
+        const oldSnip=trunc(prev.siteText,2000);
+        const newSnip=trunc(res.siteText,2000);
+        const chgPrompt=`Você é analista de inteligência competitiva imobiliária. Compare o conteúdo ANTERIOR e ATUAL do site "${comp.nome}" e identifique o que mudou.
+
+CONTEÚDO ANTERIOR:
+${oldSnip}
+
+CONTEÚDO ATUAL:
+${newSnip}
+
+Responda APENAS com até 5 itens no formato:
+• [tipo de mudança]: [descrição curta e objetiva]
+
+Exemplos de tipos: Nova página, Novo empreendimento, Preço alterado, CTA alterado, Conteúdo removido, Novo lançamento, Nova oferta, Texto alterado.
+Se encontrar URLs específicas de novas páginas, inclua-as.
+Se não houver diferença significativa, diga apenas: • Alteração menor: sem mudança de conteúdo relevante`;
+        res.changeSummary=await callAI(chgPrompt);
+        if(updateUI)stepSet('chgsum','done','✅ Resumo de mudanças gerado');
+      }catch(e){
+        res.changeSummaryError=e.message;
+        if(updateUI)stepSet('chgsum','error',`Resumo: ${e.message}`);
+      }
+    }
   }catch(e){
     res.siteError=e.message;
     if(updateUI)stepSet('site','error',`Site: ${e.message}`);
@@ -947,7 +976,8 @@ ${trunc(searchSummary,3000)||'Sem resultados'}`;
   // Alertas
   const tc=document.getElementById('tog-chg-alert');
   if(res.siteChanged&&(!tc||tc.classList.contains('on'))){
-    alert_add('medio','🌐',`${comp.nome} — Site alterado!`,`Mudança detectada em ${res.date} às ${res.time}`);
+    const alertDetail=res.changeSummary?`Mudança detectada em ${res.date} às ${res.time}\n${res.changeSummary}`:`Mudança detectada em ${res.date} às ${res.time}`;
+    alert_add('medio','🌐',`${comp.nome} — Site alterado!`,alertDetail);
   }
   if(!res.siteError&&!prev){
     alert_add('info','🔍',`${comp.nome} — Primeira varredura concluída`,`${res.time} · ${(comp.cidades||[]).length} cidades monitoradas`);
@@ -996,6 +1026,18 @@ function showScanResult(res){
   const srchCount=res.searches?res.searches.filter(s=>s.result).length:0;
   const srchPill=srchCount?`<span class="scan-pill sp-ok">🔎 ${srchCount} busca${srchCount>1?'s':''} realizadas</span>`:'<span class="scan-pill sp-pend">🔎 Sem buscas</span>';
 
+  const changeH=res.siteChanged&&res.changeSummary?`
+    <div style="background:var(--od);border:1px solid var(--orange);border-radius:8px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:9px">
+        <span style="font-size:16px">🔄</span>
+        <span style="font-size:13px;font-weight:700;color:var(--orange)">O QUE MUDOU</span>
+        <span style="font-size:11px;color:var(--text2);margin-left:auto">${res.date} ${res.time}</span>
+      </div>
+      <div style="font-size:13px;line-height:1.8;color:var(--text)">${fmt(res.changeSummary)}</div>
+    </div>`
+  :(res.siteChanged&&res.changeSummaryError?`<div style="background:var(--od);border:1px solid var(--orange);border-radius:8px;padding:10px;margin-bottom:12px;font-size:12px;color:var(--orange)">🌐 Site alterado — resumo indisponível: ${res.changeSummaryError}</div>`:
+  (res.siteChanged?`<div style="background:var(--od);border:1px solid var(--orange);border-radius:8px;padding:10px;margin-bottom:12px;font-size:12px;color:var(--orange)">🌐 Site alterado — configure uma IA em Configurações para ver o resumo das mudanças</div>`:''));
+
   const aiH=res.analysis?`
     <div class="aib" style="margin-top:14px">
       <div class="aihd"><span>🤖</span><span class="ait">Análise IA — ${res.compNome}</span><span class="aid">${res.date} ${res.time}</span></div>
@@ -1029,6 +1071,7 @@ function showScanResult(res){
       <a href="https://${res.compSite}" target="_blank" class="tag tgr" style="text-decoration:none">🌐 Site</a>
     </div>
     ${cidadesH?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px">${cidadesH}</div>`:''}
+    ${changeH}
     ${aiH}
     ${searchesH}
     ${siteH}`;
@@ -1267,6 +1310,13 @@ function renderRadar(){
     const cidsH=(sc.cidades||[]).map(c=>`<span class="city-tag">📍${c}</span>`).join('');
     const libUrl=sc.adsLibraryUrl||`https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=BR&q=${encodeURIComponent(sc.compNome)}`;
 
+    const chgH=sc.siteChanged&&sc.changeSummary?`
+      <div style="background:var(--od);border:1px solid var(--orange);border-radius:8px;padding:12px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px"><span>🔄</span><span style="font-size:12px;font-weight:700;color:var(--orange)">O QUE MUDOU</span></div>
+        <div style="font-size:12px;line-height:1.8;color:var(--text)">${fmt(sc.changeSummary)}</div>
+      </div>`:
+      (sc.siteChanged&&!sc.changeSummary?`<div style="background:var(--od);border:1px solid var(--orange);border-radius:8px;padding:9px;margin-bottom:10px;font-size:12px;color:var(--orange)">🌐 Site alterado — configure uma IA para ver o resumo das mudanças</div>`:'');
+
     const aiH=sc.analysis?`<div class="aib" style="margin-top:12px"><div class="aihd"><span>🤖</span><span class="ait">Análise IA</span><span class="aid">${sc.time}</span></div><div class="aix">${fmt(sc.analysis)}</div></div>`:
       (sc.analysisError?`<div style="color:var(--text2);font-size:12px;margin-top:8px;padding:8px;background:var(--bg2);border-radius:6px">⚠️ IA: ${sc.analysisError}</div>`:'');
 
@@ -1291,6 +1341,7 @@ function renderRadar(){
         <a href="https://${sc.compSite}" target="_blank" class="tag tgr" style="text-decoration:none">🌐 Site</a>
         <a href="${libUrl}" target="_blank" class="tag tbl" style="text-decoration:none">📣 Ads Library</a>
       </div>
+      ${chgH}
       ${aiH}
       ${searchesH}
     </div>`;
